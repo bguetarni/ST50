@@ -16,6 +16,30 @@ The package require the Tahoma font as the original covers use it.
 
 To load the Tahoma font, the fontspec package is used which means the document must be compiled with *xelatex* or *lualatex* (at the moment not lualatex because of a [pgf bug](https://sourceforge.net/p/pgf/bugs/384/)).
 
+### Install LaTex
+```
+sudo apt install texlive-latex-extra
+sudo apt-get install texlive-fonts-extra
+sudo apt-get install texlive-lang-french
+sudo apt-get install texlive-xetex
+```
+
+### Install Tahoma
+```
+wget https://sourceforge.net/projects/corefonts/files/OldFiles/IELPKTH.CAB
+apt install cabextract
+cabextract -F 'tahoma*ttf' IELPKTH.CAB
+mkdir -p /usr/share/fonts/truetype/msttcorefonts/
+mv -f tahoma*ttf /usr/share/fonts/truetype/msttcorefonts/
+chmod 644 /usr/share/fonts/truetype/msttcorefonts/tahoma*
+fc-cache -v
+rm -f IELPKTH.CAB
+```
+(https://askubuntu.com/questions/438670/install-tahoma-font-in-ubuntu)
+
+### Install LaTEX extension for VSCode
+https://github.com/James-Yu/LaTeX-Workshop
+
 # Installation
 
 ## Install the package

@@ -2,9 +2,16 @@
 % not lualatex because of a pgf bug: https://sourceforge.net/p/pgf/bugs/384/
 \documentclass[12pt, a4paper]{report}
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
+\usepackage[english]{babel}
 \usepackage{hyperref}
 \usepackage{utbmcovers}
+\usepackage{titlesec}
+\usepackage[nottoc]{tocbibind}
+
+\titleformat{\chapter}[block]{\normalfont\huge\bfseries}{\thechapter.}{5pt}{\Huge}
+\titlespacing{\chapter}{0pt}{0pt}{40pt}
+\setcounter{tocdepth}{0} % Show chapters only
+\newfontfamily\italictahomafont{Tahoma}[FakeSlant=0.4]
 
 %----------------------------------------
 % hyperref configuration
@@ -19,27 +26,55 @@
 % utbmcovers configuration
 %----------------------------------------
 
-\setutbmfrontillustration{utbm_default_illustration}
-\setutbmtitle{Analyse de durabilité des systèmes\\ de propulsion par microcontrôleurs externes}
-\setutbmsubtitle{Rapport de stage ST50 - P2008}
-\setutbmstudent{JACQUES Pierre-Paul}
-\setutbmstudentdepartment{Département Génie électrique\\ et systèmes de commande}
-\setutbmstudentpathway{Filière Commande des systèmes\\ et automatismes}
-\setutbmcompany{Entreprise DEMO-Contrôleurs}
-\setutbmcompanyaddress{8 rue de la Fierté\\ 75 013 Paris}
-\setutbmcompanywebsite{\href{www.democontroleurs.com}{www.democontroleurs.com}}
-\setutbmcompanytutor{JACQUES Pierre-Paul}
-\setutbmschooltutor{JACQUES Pierre-Paul}
-\setutbmkeywords{Mot clef 1 - Mot clef 2 - Mot clef 3 - Mot clef 4 - Mot clef 5 - Mot clef 6\\ Mot clef 7 – Mot clef 8}
+\setutbmfrontillustration{report_cover}
+\setutbmtitle{Deep Learning for Egocentric vision}
+\setutbmsubtitle{ST50 thesis - P2020}
+\setutbmstudent{GUETARNI Bilel}
+\setutbmstudentdepartment{Computer Science department}
+\setutbmstudentpathway{Image, Interaction et Réalité Virtuelle}
+\setutbmcompany{Haute Ecole d'Ingénierie et de Gestion du Canton de Vaud}
+\setutbmcompanyaddress{Avenue des Sports 29\\1400 Yverdon-les-Bains}
+\setutbmcompanywebsite{\href{https://heig-vd.ch/}{heig-vd.ch}}
+\setutbmcompanytutor{PEREZ-URIBE Andres}
+\setutbmschooltutor{GABER Jaafar}
+\setutbmkeywords{Deep Learning - Computer vision - Action recognition - Egocentric vision - GPU - Patient follow-up}
 \setutbmabstract{
-	Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
+	Deep learning has been widely used in computer vision in the last two decades.
+	Several tasks have been addressed with, including object detection, content generation, image or instance segmentation and a couple of others.
+	Nowadays very complex tasks are at the heart of academic research, including action/activity recognition; these two last are really similar, the difference is slight so here we will use the term of action recognition (the difference can be for example the action of picking a fork during the activity of cooking).
+	Particularly, achieving action recognition at a reasonable accuracy could allow the follow-up of people with reduced physical capacities especially with tremors in their daily life.
+	It will be then easy to identify the actions that a person struggle with, and then conduct a targeted rehabilitation process.
+	In this internship I explored how deep learning can be applied in this particular task and what the actual state-of-the-art is.
+	I focused on cheap computation solutions as it is expected to be used on edge devices; e.g. mobile phone, embedded device...
 }
 
-%----------------------------------------
+%----------------------------------------.
 % document
 %----------------------------------------
 
 \begin{document}
 	\makeutbmfrontcover{}
+
+	\tableofcontents
+	
+	\chapter{Introduction}
+	\section{Deep Learning and Computer Vision}
+	Deep learning is a really successful field that is currently under innumerable investigations. Despite the very known difficulties associated, numerous people jump into it every day.
+	It has been successfully applied to several domains like computer vision, natural language processing, board games and a raft of others.
+	The first one is currently the most explored with a lot of academic research associated with huge industrial applications.
+	Deep learning has revolutionized the field of computer vision by its accuracy never reached by classical algorithms.
+	From the begginning, computer vision played an important role in the development of deep learning \cite{lecun_zipcode,lecun_mnist}.
+	Today, it's a popular opinion that among the roads to explore to resolve a computer vision problem, deep learning is a major one.
+	However, deep learning suffer from a major drawback, that is the need of enormeous datasets.
+	As the tasks tackled become more and more complex, the systems need more and more data to reach an acceptable accuracy.
+	Also, most of systems for computer vision are trained in a supervised learning fashion which requires labeled data, and for some tasks it is really hard to find such ones (even if synthetic data can be used, this still raise the problem of synthetic-to-real domain gap).
+	Moreover, the more data we have, the more computations are then needed and we know that recents deep learning systems can take several weeks to train.
+	Despite those drawbacks, and because several workarounds have been developed, we still see deep learning as a powerful tool to enhance our systems.
+	
+
+	\chapter{Action recognition}
+
+	\bibliographystyle{unsrt}
+	\bibliography{bibliography}
 	\makeutbmbackcover{}
 \end{document}
