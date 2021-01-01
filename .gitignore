@@ -16,6 +16,15 @@
 *.cb
 *.cb2
 *.sta
+*.bbl
+*.blg
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
 
 ## Intermediate documents:
 *.dvi
