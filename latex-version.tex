@@ -49,7 +49,16 @@
     name=Egocentric view,
     description={first person view}
 }
-
+\newglossaryentry{nlp}
+{
+    name=Natural Language Processing,
+    description={automatic process of language by computer}
+}
+\newglossaryentry{synthdata}
+{
+    name=Synthetic-to-Real domain gap,
+    description={the unreal property of synthetic data that impacts models accuracy when trained on}
+}
 \begin{document}
 	\makeutbmfrontcover{}
 
@@ -66,14 +75,14 @@
 	\section{Deep Learning and Computer Vision}
 	Deep Learning is a really successful field that is currently under innumerable investigations.
 	Despite the well-known difficulties associated, numerous people jump into it every day.
-	It has been successfully applied to several domains like Computer Vision, Natural Language Processing, board games and a raft of others.
+	It has been successfully applied to several domains like Computer Vision, \gls{nlp}, board games and a raft of others.
 	The first one is currently the most explored with a lot of academic research associated with huge industrial applications.
 	Deep learning has revolutionized the field of computer vision by its accuracy never reached by classical algorithms.
 	From the beginning, computer vision played an important role in the development of deep learning \cite{lecun_zipcode,lecun_mnist}.
-	Today, it's a popular opinion that among the roads to explore to resolve a computer vision problem, deep learning is a major one.\\
-	However, deep learning suffer from a major drawback, that is the need of enormous datasets.
+	Today, it's a popular opinion that among the roads to explore to resolve a problem, deep learning is a major one.\\
+	However, it suffers from a major drawback, its need of enormous datasets.
 	As the tasks tackled become more and more complex, the systems need more and more data to reach an acceptable accuracy.
-	Also, most systems for computer vision are trained in a supervised learning fashion which requires data to be labeled, and for some tasks it is really hard to find such ones (even if synthetic data can be used, this still raise the problem of synthetic-to-real domain gap).
+	Also, most systems for computer vision are trained in a supervised learning fashion which requires data to be labeled, and for some tasks it is really hard to find such ones (even if synthetic data can be used, this still raise the problem of \gls{synthdata}).
 	Moreover, the more data we have, the more computations are then needed, and we know that recent deep learning systems can take several weeks to train.\\
 	
 	Despite those drawbacks, and because several workarounds have been developed, deep learning is still seen as a powerful tool to enhance our systems.
