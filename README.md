@@ -97,6 +97,7 @@ before using the *utbmcovers* configuration functions.
 
 See [latex-upmethodology-version.tex](latex-upmethodology-version.tex) for a complete example.
 
-# Other resources
+# Other
+To include a glossary, compile by hand with: ```makeglossaries filename```
 
-[utbm-beamer-theme](https://github.com/pinam45/utbm-beamer-theme): A LaTeX beamer version of the UTBM presentation theme using TikZ.
+To include a bibliography managed by an external file, compile by hand with: ```bibtex filename.aux```
