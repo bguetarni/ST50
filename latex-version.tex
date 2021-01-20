@@ -14,8 +14,8 @@
 
 \titleformat{\chapter}[block]{\normalfont\huge\bfseries}{\thechapter.}{5pt}{\Huge}
 \titlespacing{\chapter}{0pt}{0pt}{40pt}
-\setcounter{tocdepth}{0} % Show chapters only
-%\newfontfamily\italictahomafont{Tahoma}[FakeSlant=0.4]
+% \setcounter{tocdepth}{0} % Show chapters only
+% \newfontfamily\italictahomafont{Tahoma}[FakeSlant=0.4]
 \newfontfamily\boldtahomafont{Tahoma}[]
 \graphicspath{ {images/} }
 \renewcommand*{\glstextformat}[1]{\textcolor{black}{#1}}
@@ -41,8 +41,8 @@
 	Nowadays very complex tasks are at the heart of academic research, including action/activity recognition; these two last are really similar, the difference is slight so here we will use the term of action recognition (the difference can be for example the action of picking a fork during the activity of cooking).
 	Particularly, achieving action recognition at a reasonable accuracy could allow the follow-up of people with reduced physical capacities especially with tremors in their daily life.
 	It will be then easy to identify the actions that a person struggle with, and then conduct a targeted rehabilitation process.
-	In this internship I explored how deep learning can be applied in action recognition and what the actual state-of-the-art is.
-	I focused on cheap computation solutions as it is expected to be used on edge devices; e.g. mobile phone, embedded device...
+	In this internship we explored how deep learning can be applied in action recognition and what the actual state-of-the-art is.
+	We focused on cheap computation solutions as it is expected to be used on edge devices; e.g. mobile phone, embedded device...
 }
 
 \makeglossaries
@@ -78,13 +78,37 @@
 	% write table of content
 	{
 	\hypersetup{linkcolor=black}
-	\tableofcontents
+	\tableofcontents{}
 	}
 	
 	% write acronyms
 	\printglossary
 	
+	\newpage
+	\section*{Acknowledgements}
+	I would like to express my deep gratitude to the Haute École d'Ingénierie et de Gestion du Canton de Vaud for receiving me during this internship and particulary to the International Office for providing me support, dedication and availability in these particular times.
+	I would also like to thank the Communauté du Savoir that makes these extraterritorial cooperation possible that allows students to benefit from other universities education.
+	Finally, I am particularly grateful to Mr. Andres PEREZ-URIBE and all his team, for all the advices, support and teaching they enthusiastically gave me.
+	I adress them my very great appreciation for the assistance and the kindness they showed to me and the time they consecrated for my project.
+
+	
 	\chapter{Introduction}
+	\section{Institut des Technologies de l’Information et de la Communication}
+	The {\itshape Institut des Technologies de l’Information et de la Communication} (IICT) is the biggest research institute of the Haute École d'Ingénierie et de Gestion du Canton de Vaud with more than 50 researchers and engineers and near 20 teachers.
+	Its research is divided into software engineering, telecommunications, artifical intelligence, digital security and communication systems.
+	They realize each year more than 60 projects mostly with industrials.\\
+	
+	In this institut work the professor Andres PEREZ-URIBE and his team, {\itshape Intelligent Data Analysis} group, on big data analysis and intelligent data analysis.
+	This team {\itshape works on making sense of data by developing and using data-driven models using Machine Learning approaches (including artificial intelligence, artificial life and bio-inspired approaches) as an alternative to analytical models for classification, prediction, explanation and visualization}.
+	They {\itshape aim at providing solutions to deal with the current scenario of "data deluge" (Big Data) and to provide innovative solutions for the new ubiquitous computing world (Internet of Things and Quantified Self)}.\\
+	They developped several applications based on intelligent systems as:
+	\begin{itemize}
+		\item \href{http://iict.heig-vd.ch/projets#/49/agrovision-developpement-dun-outil-de-suivi-base-sur-limagerie-aerienne-a-haute-resolution-pour-une-meilleure-gestion-agronomique-et-environnementale-de-lagriculture}{Agrovision}: an aerial image based tool for agriculture monitoring.
+		\item \href{http://iict.heig-vd.ch/projets#/47/clustersitg-semantic-analysis-and-clustering-of-sitg-catalogue}{ClusterSITG}: an automatic tool for metadata organization.
+		\item \href{http://iict.heig-vd.ch/projets#/43/crowdstreams-analyse-et-surveillance-en-temps-r-el-de-mobilit-la-proximit-des-grands-v-nements}{CrowdStreams}: an application for crowd analyze and monitoring.
+	\end{itemize}
+
+
 	\section{Deep Learning and Computer Vision}
 	Deep Learning is a really successful field that is currently under innumerable investigations.
 	Despite the well-known difficulties associated, numerous people jump into it every day.
@@ -175,7 +199,9 @@
 	Thus, it allows us to process only the information we need and make abstraction of the rest.
 	For example, while reading this, your attention is focused on these particular words and discard the surrounding ones even if they appear in your field of view.
 	This way, it is easier for your mind to read.
-	Attention was first used in NLP to help encoder-decoders for translating long sentences (\cite{bahdanau}).
+	Attention was first used in NLP to help auto-encoders for translating long sentences (\cite{bahdanau}).
+	However, the attention is used to differe
+	It has then been introduced in computer vision by \cite{xu}, to help models for image captioning.
 	Focusing the attention on some features requires to highlight them, so they are visually more interesting.
 	In computer vision this can be seen as \gls{saliency} (Figure \ref{f3}).
 	\begin{figure}[!tbp]
@@ -184,12 +210,25 @@
 		\caption{Saliency map of a car as seen by a human.}
 	\end{figure}
 	In deep learning, one could use weights to make some features more visible than others.
-	In \cite{sudhakaran_lanz}, the feature maps extracted by a pre-trained backbone are used as weights to encode visual attention in RGB frames; rigorously speaking, the weights are derived from a pre-classification.
+	In \cite{sudhakaran_lanz}, the features maps extracted by a pre-trained backbone are used as weights to encode visual attention in RGB frames; rigorously speaking, the weights are derived from a pre-classification of these features maps.
 	Then these weighted frames go through a ConvLSTM for classification.
-	They call these weighted frames {\itshape Spatial Attention Map}.\\
+	These weighted frames are called {\itshape Spatial Attention Map}.\\
 
 	\section{EPIC-KITCHENS}
 	What would be deep learning without data ?
+	From the very beginning, people have been struggle to push deep architectures into configuration with acceptable accuracy.
+	Most researchers claim that the more data is gathered for training, the likeliest the model will converge.
+	However, certain problems require labels that are either complex or long to create.
+	For example, image segmentation require that every pixels of an object is labeled within its category.
+	And this, for all labled objects in every images.
+	This reflects the difficulty to produce accurate and large scaled dataset for supervised learning.\\
+	
+	For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchens actions: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
+	This dataset has been published in 2018, \cite{damen_18}, with approximately 40K action segments using more than 55 hours of recording.
+	Recently, a second version came out with more than 90K action segments (which have been extracted from 100 hours of recording).
+	Not only it contains action recognition labels, but also action detection, action anticipation and several others.
+	To this date, it's the biggest egocentric action recognition dataset.
+
 	
 	\bibliographystyle{unsrt}
 	\bibliography{bibliography}
