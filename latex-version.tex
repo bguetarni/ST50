@@ -82,9 +82,11 @@
 	\hypersetup{linkcolor=black}
 	\tableofcontents{}
 	}
-	
+
 	% write acronyms
 	\printglossary
+
+	\setlength{\parindent}{15pt}
 	
 	\newpage
 	\chapter*{Acknowledgements}
@@ -99,11 +101,10 @@
 		\section{Institut des Technologies de l’Information et de la Communication}
 			The {\itshape Institut des Technologies de l’Information et de la Communication} (IICT) is the biggest research institute of the Haute École d'Ingénierie et de Gestion du Canton de Vaud (HEIG-VD) with more than 50 researchers and engineers and near 20 teachers.
 			Its research is divided into software engineering, telecommunications, artifical intelligence, digital security and communication systems.
-			They realize each year more than 60 projects, mostly with industrials.\\
-			
+			They realize each year more than 60 projects, mostly with industrials.\par
 			In this institut work the professor Andres PEREZ-URIBE and his team, the Intelligent Data Analysis group, on big data analysis and intelligent data analysis.
 			This team \say{works on making sense of data by developing and using data-driven models using Machine Learning approaches (including artificial intelligence, artificial life and bio-inspired approaches) as an alternative to analytical models for classification, prediction, explanation and visualization}.
-			They \say{aim at providing solutions to deal with the current scenario of "data deluge" (Big Data) and to provide innovative solutions for the new ubiquitous computing world (Internet of Things and Quantified Self)}.\\
+			They \say{aim at providing solutions to deal with the current scenario of "data deluge" (Big Data) and to provide innovative solutions for the new ubiquitous computing world (Internet of Things and Quantified Self)}.
 			They developped several applications based on intelligent systems as:
 			\begin{itemize}
 				\item \href{http://iict.heig-vd.ch/projets#/49/agrovision-developpement-dun-outil-de-suivi-base-sur-limagerie-aerienne-a-haute-resolution-pour-une-meilleure-gestion-agronomique-et-environnementale-de-lagriculture}{Agrovision}: an aerial image based tool for agriculture monitoring.
@@ -111,16 +112,27 @@
 				\item \href{http://iict.heig-vd.ch/projets#/43/crowdstreams-analyse-et-surveillance-en-temps-r-el-de-mobilit-la-proximit-des-grands-v-nements}{CrowdStreams}: an application for crowd analyze and monitoring.
 			\end{itemize}
 
-			\section{Internship context}
-			Lorem ipsum.
+		\section{Internship context}
+			Since the availability of huge data bases, modern deep learning has been applied on several tasks with amazing performance.
+			One of such tasks is action recognition.
+			There have been considerable researchs on this topic using deep learning, but the lack of relatively large scaled datasets have limited the possibilities to develop supervised learning solutions.
+			Rencently, there have been considerable works to create such datasets, thus, the exploration of deep learning architectures for action recognition has began.
+			There is a particular dataset that concentrates on actions performed in a kitchen.
+			The objective is to recognize a performed action (through a video) in an first person view, also called egocentric vision.
+			The purpose of this internship is to create a deep learning system that is able to recognize the actions present in the dataset with the highest accuracy possible.\par
+			\bigbreak
+			We will first describe the relationship between deep learning and computer vision to understand which important part the first has become to the latter.
+			Then, we'll review the state-of-the-art of action recognition in the literature to describe afterwards which methods were studied.
+			In a critical process, we then critic the obtained results along with an interpretation.
+			Finally, we'll conclude with some observations and difficulties encountered and open some roads for future investigation.
 
 	\chapter{Action recognition in egocentric vision}\label{ar}
-		Content recognition is at the heart of the deep learning literature since the beginning. It began with numbers \cite{lecun_98}, animals (e.g. cats for the most popular one) and more recently complex concepts as actions.
+		Content recognition is at the heart of the deep learning literature since the beginning. It began with numbers \cite{lecun_98}, animals (e.g. cats for the most popular one) and more recently complex concepts as such actions.
 		Human action recognition requires developing systems that can capture motion over time (sequence prediction), or systems that can recognize an action through a single frame.
 		The first case has seen emerged novels architecture as 3D convolutional networks \cite{ji} and two-stream architectures (see \ref{twostream}).
 		It is worth to notice that action recognition is itself split in two categories: first person view, also known as \gls{ego} (Figure \ref{f1}), and third person view (Figure \ref{f2}); in this work, we focus on egocentric view action recognition.
-		If we look in the literature, we'll see that egocentric vision has been neglected over third person view.
-		Nonetheless, large scaled recently published datasets have exposed the egocentric view problematic and encouraged research for.\\
+		If we look in the literature, we'll see that egocentric vision has been neglected over third person view for a long time.
+		Nonetheless, large scaled recently published datasets have exposed the egocentric view problematic and encouraged research for.
 		\begin{figure}[!tbp]
 			\centering
 			\subfloat[First person.]{\includegraphics[width=0.4\textwidth]{firstperson.jpeg}\label{f1}}
@@ -128,7 +140,6 @@
 			\subfloat[Third person.]{\includegraphics[width=0.4\textwidth]{thirdperson.jpg}\label{f2}}
 			\caption{Action views.}
 		\end{figure}
-		
 		A similar task that is increasingly covered is image captioning \cite{xu}, where a model try to add a caption to an image; which is highly related to scene understanding.
 		It is easy to see that they are sensibly similar and actually, many advances that came out for image captioning are now used for action recognition (attention mechanism, recurrent neural networks).
 
@@ -139,19 +150,17 @@
 			The first one is currently the most explored with a lot of academic research associated with huge industrial applications.
 			Deep learning has revolutionized the field of computer vision by its accuracy never reached by classical algorithms.
 			From the beginning, computer vision played an important role in the development of deep learning \cite{lecun_89,lecun_98}.
-			Today, it's a popular opinion that among the roads to explore to resolve a problem, deep learning is a major one.\\
+			Today, it's a popular opinion that among the roads to explore to resolve a problem, deep learning is a major one.\par
 			However, it suffers from a major drawback, its need of enormous datasets.
 			As the tasks tackled become more and more complex, the systems need more and more data to reach an acceptable accuracy.
 			Also, most systems for computer vision are trained in a supervised learning fashion which requires data to be labeled, and for some tasks it is really hard to find such ones (even if synthetic data can be used, this still raise the problem of \gls{synthdata}).
-			Moreover, the more data we have, the more computations are then needed, and we know that recent deep learning systems can take several weeks to train.\\
-			
+			Moreover, the more data we have, the more computations are then needed, and we know that recent deep learning systems can take several weeks to train.\par
 			Despite those drawbacks, and because several workarounds have been developed, deep learning is still seen as a powerful tool to enhance our systems.
 
-	
 			\subsection*{Some applications}
 				Among the different applications of action recognition we find patient follow-up.
 				Medical staff could use automatic egocentric view action recognition to find which actions in the daily-life of a person with physical abilities disorders are the most difficult for them\footnote{Of course recognize the action is not sufficient, one should detect the disorders.}.
-				And then use these analyses to conduct a targeted rehabilitation process.\\
+				And then use these analyses to conduct a targeted rehabilitation process.\par
 				One should also notice the interesting potential of action recognition systems for video audio description, this could make all TV programs or videos accessible in audio description for blind or visually impaired people.
 				However, it can also allow for dangerous or malicious applications as intrusive and ubiquitous surveillance.
 
@@ -159,8 +168,12 @@
 			In this chapter we introduce the state-of-the-art of the egocentric action recognition literature.
 			We'll show that a majority of papers have focused on a particular architecture; for a particular reason.
 			Furthermore, we'll see how different approaches, currently under investigation, taken from NLP have achieved considerable performance.
+			
+			\subsection{Two-stream architectures}\label{twostream}
+				Currently, the most used architecture for action recognition is the so-called two-stream architecture.
+				It consists of two subsystems, each one processing different image modalities.
 
-			\subsection{Optical flows}\label{optf}
+				\subsubsection{Optical flows}
 				As said in the introduction of this chapter, to recognize an action it is almost necessarily to capture the motion.
 				This problematic of describing motion has been extremely present in the computer vision literature.
 				It gave rise to optical flows, sometimes also called optical flow fields.
@@ -169,20 +182,19 @@
 				Sparse optical flow track particular pixels among the images using feature selectors(e.g. Harris corner detector) and computes their displacment.
 				On the other hand, dense optical flow is a per-pixel-motion estimate method.
 				Here, we'll consider the latter one.
-				There are several methods to compute dense optical flows, but the most known (and used) are the TV-L1 \cite{sanchez} and the Gunner Farnebäck \cite{farneback} algorithms.\\  % TODO: mathematical development of the two methods in appendix
+				% TODO: mathematical development of the two methods in appendix
+				There are several methods to compute dense optical flows, but the most known (and used) are the TV-L1 \cite{sanchez} and the Gunner Farnebäck \cite{farneback} algorithms.\par
 				Nowadays, even deep learning is considered for modeling optical flows (\cite{hur}).
-				Note: since dense optical flow use all the pixels of 2 images, their computation is quite heavy.\\
-			
-			\subsection{Two-stream architectures}\label{twostream}
-				Currently, the most used architecture for action recognition is the so-called two-stream architecture.
-				It consists of two subsystems, each one processing different image modalities.
+				Note: since dense optical flow use all the pixels of 2 images, their computation is quite heavy.
+
+				\subsubsection{Related work}
 				For example, in \cite{wang}, two Convolutional Neural Networks (CNN or ConvNet) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
 				The two-stream are identical except for the number of features expected for the input.
 				The first one expect RGB images, which make 3 features, while the second one expect optical flows.
 				Random RGB images and optical flows are drawn from the action video and fed to their corresponding CNNs.
 				At then end, a consensus function combines all the outputs to infer the final prediction.
 				Notice that as the RGB images are processed individually, the motion cannot be encoded by its corresponding CNN.
-				They also show that using RGB differences rather than one image improves the performances (due to the difficulty to extrapolate motion through a single frame).\\
+				They also show that using RGB differences rather than one image improves the performances (due to the difficulty to extrapolate motion through a single frame).\par
 				Yet, processing the images separately prevent the model to use the temporal correlation of the images.
 				Even if we use optical flows, they describe an infinitesimal motion compared to the whole action motion.
 				In \cite{ye}, this idea of using the temporal correlation of the images makes use of Recurrent Neural Networks (RNN) associated with a novel deep learning technique: ConvLSTM \cite{shi}.
@@ -192,8 +204,7 @@
 				For this end, they replace the matrix product by convolutions.
 				This simple yet effective trick create a sort of Convolutional Recurrent Neural Network.
 				This was later used in \cite{ye} as following: a ResNet-101 pre-trained on ImageNet is used as feature extractor and the resulting feature maps are fed to a ConvLSTM.
-				Naturally, optical flows are also used in parallel of RGB images.\\
-
+				Naturally, optical flows are also used in parallel of RGB images.\par
 				Last but not least, a recently published paper developed a similar approach, but with an extra step.
 				Sudhakaran et al. \cite{sudhakaran} pointed a major difficulty to action recognition in egocentric vision that is the \say{huge variations present in the data caused by the highly articulated nature of the human body}.
 				From this, they derive an architecture that uses a widely studied mechanism nowadays: attention.
@@ -201,20 +212,18 @@
 				They achieve the best results to this date.
 
 			\subsection{EPIC-KITCHENS}\label{epic_kitchen}
-				What would be deep learning without data ?\\
+				What would be deep learning without data ?\par
 				From the very beginning, people have been struggling to push deep architectures into configuration with acceptable accuracy.
 				Most researchers claim that the more data is gathered for training, the likeliest the model will converge.
 				However, certain problems require labels that are either complex or long to create.
 				For example, image segmentation requires that every pixels of an object is labeled within its category.
 				And this, for all labled objects in every captured images.
-				This reflects the difficulty to produce accurate and large scaled dataset for supervised learning.\\
-				
+				This reflects the difficulty to produce accurate and large scaled dataset for supervised learning.\par
 				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchens actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
 				This dataset has been published in 2018, \cite{damen_18}, with approximately 40K actions using more than 55 hours of recording.
 				Recently, a second version came out with more than 90K action segments (which have been extracted from 100 hours of recording).
 				Not only it contains action recognition labels, but also action detection, action anticipation and several others.
-				To this date, it's the biggest egocentric action recognition dataset.\\
-
+				To this date, it's the biggest egocentric action recognition dataset.\par
 				Each action is delimited in time by is frames, and is labeled with a {\itshape verb} and a {\itshape noun} (see Figure \ref{f4}).
 				\begin{figure}[!tbp]
 					\centering
@@ -222,8 +231,11 @@
 					\caption{Close ({\small verb}) the refrigerator ({\small noun}).}
 				\end{figure}
 
-		\section{Development}
+		\section{Studied methods}
 			\subsection{Transfer Learning}\label{tl}
+				Lorem ipsum.
+			
+			\subsection{LSTM and ConvLSTM}\label{lstm}
 				Lorem ipsum.
 			
 			\subsection{What is Attention ?}\label{attention}
@@ -245,7 +257,7 @@
 				In deep learning, one could use weights to make some features more visible than others.
 				In \cite{sudhakaran_lanz}, the features maps extracted by a pre-trained backbone are used as weights to encode visual attention in RGB frames; rigorously speaking, the weights are derived from a pre-classification of these features maps.
 				Then these weighted frames go through a ConvLSTM for classification.
-				These weighted frames are called {\itshape Spatial Attention Map}.\\
+				These weighted frames are called {\itshape Spatial Attention Map}.
 	
 		\section{Results and interpretation}
 			Lorem ipsum.
