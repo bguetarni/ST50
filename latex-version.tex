@@ -4,7 +4,7 @@
 \documentclass[12pt, a4paper]{report}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
-\usepackage[colorlinks=true, linkcolor=red, urlcolor=]{hyperref}
+\usepackage{hyperref}
 \usepackage{utbmcovers}
 \usepackage{titlesec}
 \usepackage[nottoc]{tocbibind}
@@ -20,7 +20,7 @@
 % \newfontfamily\italictahomafont{Tahoma}[FakeSlant=0.4]
 \newfontfamily\boldtahomafont{Tahoma}[]
 \graphicspath{ {images/} }
-\renewcommand*{\glstextformat}[1]{\textcolor{black}{#1}}
+\renewcommand*{\glstextformat}[1]{\color{black}{#1}}
 
 %----------------------------------------
 % utbmcovers configuration
@@ -78,14 +78,12 @@
 	\makeutbmfrontcover{}
 
 	% write table of content
-	{
-	\hypersetup{linkcolor=black}
 	\tableofcontents{}
-	}
-
+	
 	% write acronyms
 	\printglossary
-
+	
+	% set paragraph indent length
 	\setlength{\parindent}{15pt}
 	
 	\newpage
@@ -117,19 +115,18 @@
 			One of such tasks is action recognition.
 			There have been considerable researchs on this topic using deep learning, but the lack of relatively large scaled datasets have limited the possibilities to develop supervised learning solutions.
 			Rencently, there have been considerable works to create such datasets, thus, the exploration of deep learning architectures for action recognition has began.
-			There is a particular dataset that concentrates on actions performed in a kitchen.
-			The objective is to recognize a performed action (through a video) in an first person view, also called egocentric vision.
+			There is a particular dataset that concentrates on actions performed in a kitchen, the objective is to recognize a performed action (through a video) in an first person view, also called egocentric vision.
 			The purpose of this internship is to create a deep learning system that is able to recognize the actions present in the dataset with the highest accuracy possible.\par
 			\bigbreak
-			We will first describe the relationship between deep learning and computer vision to understand which important part the first has become to the latter.
+			We will first describe the relationship between deep learning and computer vision to understand which important part the first has became to the latter.
 			Then, we'll review the state-of-the-art of action recognition in the literature to describe afterwards which methods were studied.
 			In a critical process, we then critic the obtained results along with an interpretation.
 			Finally, we'll conclude with some observations and difficulties encountered and open some roads for future investigation.
 
 	\chapter{Action recognition in egocentric vision}\label{ar}
-		Content recognition is at the heart of the deep learning literature since the beginning. It began with numbers \cite{lecun_98}, animals (e.g. cats for the most popular one) and more recently complex concepts as such actions.
+		Content recognition is at the heart of the deep learning literature since the beginning. It began with numbers \cite{lecun_98}, animals (e.g. cats for the most popular one) and more recently complex concepts such as actions.
 		Human action recognition requires developing systems that can capture motion over time (sequence prediction), or systems that can recognize an action through a single frame.
-		The first case has seen emerged novels architecture as 3D convolutional networks \cite{ji} and two-stream architectures (see \ref{twostream}).
+		The first case has seen emerged novels architecture as 3D convolutional networks \cite{ji} and two-stream architectures \cite{sudhakaran, wang, ye} (see \ref{twostream}).
 		It is worth to notice that action recognition is itself split in two categories: first person view, also known as \gls{ego} (Figure \ref{f1}), and third person view (Figure \ref{f2}); in this work, we focus on egocentric view action recognition.
 		If we look in the literature, we'll see that egocentric vision has been neglected over third person view for a long time.
 		Nonetheless, large scaled recently published datasets have exposed the egocentric view problematic and encouraged research for.
