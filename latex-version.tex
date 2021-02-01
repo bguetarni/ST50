@@ -96,7 +96,7 @@
 			One of such tasks is action recognition.
 			There have been considerable researchs on this topic using deep learning, but the lack of relatively large scaled datasets have limited the possibilities to develop supervised learning solutions.
 			Rencently, there have been considerable works to create such datasets, thus, the exploration of deep learning architectures for action recognition has began.
-			There is a particular dataset that concentrates on actions performed in a kitchen where the objective is to recognize a performed action (through a video) in a first person view, also called egocentric vision.
+			There is a dataset that concentrates on actions performed in a kitchen where the objective is to recognize a performed action (through a video) in a first person view, also called egocentric vision.
 			The purpose of this internship is to create a deep learning system that is able to recognize the actions present in the dataset with the highest accuracy possible.
 			\par
 			\bigbreak
@@ -136,14 +136,13 @@
 				It is easy to see that they are sensibly similar and actually, many advances that came out for image captioning are now used for action recognition (attention mechanism, recurrent neural networks).
 				\subsection*{Some applications}
 					Among the different applications of action recognition we find patient follow-up.
-					Medical staff could use automatic egocentric action recognition to find which actions in the daily-life of a person with physical abilities disorders are the most difficult for them\footnote{Of course recognize the action is not sufficient, one should detect the disorders.}.
+					Medical staff could use automatic egocentric action recognition to find which actions in the daily-life of a person with physical abilities disorders are the most difficult for them\footnote{Of course recognize the action is not sufficient, one should detect the disorders beforehand.}.
 					And then use these analyses to conduct a targeted rehabilitation process.
 					\par
-					One should also notice the interesting potential of action recognition systems for video audio description, this could make all TV programs or videos accessible in audio description for blind or visually impaired people.
-					However, it can also allow for dangerous or malicious applications as intrusive and ubiquitous surveillance.
+					Another interesting potential of action recognition systems is video audio description, this could make all TV programs or videos accessible in audio description for blind or visually impaired people.
 		\section{State-of-the-art}
 			In this chapter we introduce the state-of-the-art of the egocentric action recognition literature.
-			We'll describe particular architecture that a majority of papers have focused on; for a particular reason.
+			We'll describe a particular architecture that a majority of papers have focused on; for a specific reason.
 			Furthermore, we'll see how different approaches, currently under investigation, taken from NLP have achieved considerable performance.
 			\subsection{Two-stream architectures}\label{twostream}
 				Currently, the most used architecture for action recognition is the so-called two-stream architecture.
@@ -154,30 +153,28 @@
 					It gave rise to optical flows, sometimes also called optical flow fields.
 					An optical flow is, most of the time, computed as a shift between two gray images.
 					Two types of optical flows exist: {\itshape sparse} and {\itshape dense}.
-					Sparse optical flow track particular pixels among the images using feature selectors (e.g. Harris corner detector) and computes their displacment.
-					On the other hand, dense optical flow is a per-pixel-motion estimate method.
-					Here, we'll consider the latter one.
-					% TODO: mathematical development of the two methods in appendix
+					Sparse optical flows track distinct pixels among the images using feature selectors (e.g. Harris corner detector) and computes their displacement.
+					On the other hand, dense optical flows are a per-pixel-motion estimate method.
+					Here, we'll consider the latter one; see Appendix \ref{appendix_c} for mathematical description.
 					There are several methods to compute dense optical flows, but the most known (and used) are the TV-L1 \cite{perez2013tv} and the Gunner Farnebäck \cite{farneback2003two} algorithms.
 					\par
 					Nowadays, even deep learning is considered for modeling optical flows \cite{hur2020optical}.
-					Note: since dense optical flow use all the pixels of 2 images, their computation is quite heavy.
 				\subsubsection{Literature}
-					In \cite{wang2016temporal}, two Convolutional Neural Networks (CNN or ConvNet) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
+					In \cite{wang2016temporal}, two Convolutional Neural Networks (CNN or ConvNet, they'll be used interchangeably but are the same thing) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
 					The two-stream are identical except for the number of features expected for the input.
-					The first one expect RGB images, which make 3 features, while the second one expect stacked optical flows.
-					Random RGB images and optical flows are drawn from the action video and fed to their corresponding CNNs.
+					The first one expect RGB images, which makes 3 features, while the second one expect stacked optical flows (2 or more features).
+					Random RGB images and optical flows are drawn from the action video and fed to their corresponding CNN.
 					At then end, a consensus function combines all the outputs to infer the final prediction.
-					Notice that as the RGB images are processed individually, the motion cannot be encoded by its corresponding CNN.
-					They also show that using RGB differences rather than one image improves the performances (due to the difficulty to extrapolate motion through a single frame).
+					Notice that as the RGB images are processed individually, the motion can hardly be encoded by the RGB stream, in opposite with the optical flow stream.
+					They also show that using RGB differences rather than stacked RGB images improves the performance.
 					\par
 					Yet, processing the images separately prevent the model to use the temporal correlation of the images.
 					Even if we use optical flows, they describe an infinitesimal motion compared to the whole action motion.
-					In \cite{ye2019two}, this idea of using the temporal correlation of the images makes use of Recurrent Neural Networks (RNN) associated with a novel deep learning technique: ConvLSTM \cite{shi2015convolutional}.
+					In \cite{ye2019two}, this idea of using the temporal correlation of the images makes use of Recurrent Neural Networks (RNN) through ConvLSTM \cite{shi2015convolutional}.
 					As originally developed, the Long Short-Term Memory (LSTM), that is discussed in \ref{lstm_convlstm}, takes as input a sequence of vector and output a single vector.
-					However, as we consider images it would be a waste to shrink the images into vectors for feeding them to a LSTM; because it will result in a loss of information.
-					To overcome this, Shi et al. \cite{shi2015convolutional} developed the ConvLSTM network, that allow to process images inside a LSTM.
-					For this end, they replace the matrix product by convolutions.
+					However, as we consider images it would be a waste to shrink the images into vectors for feeding them to a LSTM; it will result in a loss of information.
+					To overcome this, Shi et al. \cite{shi2015convolutional} developed the ConvLSTM cell, that allows to process images inside a LSTM.
+					For this end, they replace the matrix product by a convolution.
 					This simple yet effective trick create a sort of Convolutional Recurrent Neural Network.
 					\par
 					Later on, \cite{ye2019two} used a ResNet-101 pre-trained on ImageNet as feature extractor.
@@ -185,23 +182,24 @@
 					The resulting feature maps of the two modes, are fused using different strategies.
 					This result in a sequence of feature maps, that are fed to a ConvLSTM for temporal processing.
 					\par
-					Last but not least, a recently published paper developed a similar approach, but with an extra step.
-					Sudhakaran et al. \cite{sudhakaran2019lsta} pointed a major difficulty to action recognition in egocentric vision that is the \say{huge variations present in the data caused by the highly articulated nature of the human body}.
-					From this, they derive an architecture that uses a widely studied mechanism nowadays, attention, that they incorporate inside a ConvLSTM.  % TODO: more informations about the architecture and its mechanisms
-					They achieve the best results to this date.
-					\par
+					Last but not least, Sudhakaran et al. \cite{sudhakaran2019lsta} pointed a major difficulty to action recognition in egocentric vision that is the \say{huge variations present in the data caused by the highly articulated nature of the human body}.
+					Along with this difficulty, they make the following assumption (that surely makes sense): \say{the discriminative information is often confined locally in the video frame [...] thus, not all convolutional features are equally important for recognition}.
+					From these, they derive an architecture that uses a widely studied mechanism nowadays, attention.
+					They incorporate this mechanism inside a ConvLSTM and achieve the best results to this date.
+					Simply put, they add a learnable mapping to weight the input feature maps before feeding them to the cell.
+					Additionally, the output gate uses a weighted version of the cell state rather than the sequence element.
 			\subsection{EPIC-KITCHENS}
 				What would be deep learning without data ?
 				\par
 				From the very beginning, people have been struggling to push deep architectures into configuration with acceptable accuracy.
 				Researchers claim that the more data is gathered for training, the likeliest the model will converge.
-				However, certain problems require labels that are either complex or long to create.
-				For example, image segmentation requires that every pixels of an object is labeled within its category, and this, for all objects in every captured images.
+				However, certain problems require labels that are either complex or long to get.
+				For example, image segmentation requires that every pixels of an object is labeled within its category, and this, for all objects in every images.
 				This reflects the difficulty to produce accurate and large scaled datasets for supervised learning.
 				\par
 				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchens actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
-				This dataset has been published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording.
-				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments (which have been extracted from 100 hours of recording).
+				This dataset has been published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS 55).
+				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS 100).
 				Not only it contains action recognition labels, but also action detection, action anticipation and several others challenges.
 				To this date, it's the biggest open egocentric action recognition dataset available.
 				\par
@@ -212,9 +210,18 @@
 					\caption{Close ({\small verb}) the refrigerator ({\small noun}).}
 				\end{figure}
 				The biggest advantage of using this dataset is its natural looking data.
-				The videos were recording by researchers, engineers, students and other people, in their kitchens while they were doing daily stuff like: cooking, cleaning, etc.
+				The videos were recording by researchers, engineers, students and other people, in their kitchens while they were doing daily activities like: cooking, cleaning, etc.
 				The resulting data has a very natural aspect which makes it suitable to train models for real world deployment.
-				Note: However using a big dataset implies a finest management of the memory.% TODO: link to the RAM usage consideration
+				However using a big dataset implies a finest management of the memory.% TODO: link to the RAM usage consideration
+				A major drawback that natural data contained is the biased proportion between labels.
+				For any activity, all actions that we do are not uniformly distributed, and this is illustrated by the instances of each verb class of EPIC-KITCHENS 55 in Figure \ref{epic_55_imbalance}; the same problem occur for the noun classes.
+				\begin{figure}[h!]
+					\centering
+					\includegraphics[width=0.85\textwidth]{EPIC-55 data imbalance.png}
+					\caption{EPIC-KITCHENS 55 verbs instances.}
+					\label{epic_55_imbalance}
+				\end{figure}
+				This class imbalance produces highly biased models toward the most representated classes.
 		\section{Studied methods}
 			\subsection{Transfer Learning}
 				As ConvNet architectures have become bigger and bigger over the past 20 years, the time and amount of computations to train these networks grew exponentially.
@@ -237,35 +244,45 @@
 						\label{feature_visualization}
 					\end{figure}
 					In order to provide insight of what a deep ConvNet has learned, Olah et al. \cite{olah2017feature} developed the feature visualization tool.
-					Based on gradient ascent, this technique produces an image that will maximize the activations of a particular neuron (i.e. output of a single layer kernel convolution).
+					Based on gradient ascent, this technique produces an image that will maximize the activations of a specific neuron (i.e. output of a single layer kernel convolution).
 					We can do this because:  \say{neural networks are, generally speaking, differentiable with respect to their inputs. If we want to find out what kind of input would cause a certain behavior — whether that’s an internal neuron firing or the final output behavior — we can use derivatives to iteratively tweak the input towards that goal.}
 					It is useful to visualize which features a kernel, and more generally a layer, is looking for.
 					\par
-					Already before, Erhan et al. \cite{erhan2009visualizing} applied this principle of activation maximization on a Deep Belief Network and a Stacked Denoising Auto-Encoder (SDAE) trained on MNIST.
+					Already before, Erhan et al. \cite{erhan2009visualizing} applied this principle of activation maximization on different architectures trained on MNIST.
 					They found that some of the resulting images \say{look like pseudo-digits}.
-					When trained on natural images, the first layer filters of the SDAE, are \say{Gabor-like features}.
+					When trained on natural images, the first layer filters of these architectures, are \say{Gabor-like features}.
 					Combined with other results, they suggest that \say{higher level units did indeed learn meaningful combinations of lower level features}.
 				Knowing this, we can assume that the early features are common features to every sort of task.
 				Then we can reuse these trained models knowledge for other tasks; this is what transfer learning is all about, transfering knowledge from a domain to another.
 				\par
 				We provide such feature visualization for the first, fourth, eihgth and twelfth blocks, respectively, of MobileNetV2 in Figure \ref{feature_visualization}.
-				We clearly see that in \ref{block1}, the features are really just edge detectors associated to high frequencies patterns.
-				Deeper, in \ref{block4}, we see more complex features, but still, they seem to be a combination of the previous basic features.
-				And if we go even deeper, in \ref{block8} and \ref{block12}, the observed features are far more complex and are probably revealing what type of features one can encounter in ImageNet images.
+				We clearly see that in block 1 (\ref{block1}), the features are edge detectors associated with high frequencies patterns.
+				Deeper, in block 4 (\ref{block4}), we see more complex features, but still, they seem to be a combination of the previous basic features.
+				And if we go even deeper, in blocks 8 and 12 (\ref{block8} and \ref{block12} respectively), the observed features are far more complex and are probably revealing what type of features one can encounter in ImageNet images.
 				\par
 				Based on these visuals and the previous assumptions, we used the 9 first blocks of MobileNetV2, pre-trained on ImageNet, as feature extractor for our architectures.
 				We decided to do so because the last blocks of such deep networks are too much specialized on the features present in ImageNet, that are different from those in EPIC-KITCHENS.
 				We provide in appendix \ref{appendix_a}, examples of both datasets to see how different they are.
-				Even if basic features are shared (edges, corners...), the high-level features to extract are not transferable from ImageNet to EPIC-KITCHENS.
+				Even if basic features are shared (edges, corners...), we thought that the high-level features to extract are not transferable from ImageNet to EPIC-KITCHENS.
+				\par
+				{\boldtahomafont MobileNet V2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge devices utilization.
+				Modern deep networks have millions of parameters, and they are trained with modern technologies as GPU and TPU.
+				However, embedding such networks in devices with limited computation power implies to minimize the computations, especially for real-time solutions.
+				From the beginning of the project, we intended to, if a model was successful enough, use it in an edge device with real-time predictions.
+				Thus we designed our architectures using MobileNet V2 pre-trained on ImageNet as a features extractor.
+				It has the advantage of decomposing convolutions in two stages, first a depthwise convolution which processes one convolution per channel, and then a pointwise convolution that combines the channels.
+				This reduces the computations by almost a factor of $k^{2}$, where $k$ is the kernel size.
+				Additionally, MobileNet V2 uses residual blocks similar to ResNet, which has been shown to help with gradient vanishing and exploding.
 			\subsection{LSTM and ConvLSTM}\label{lstm_convlstm}
 				Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
-				They attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}.
-
+				Their ability to propagate information during the inference is particularly appreciated.
+				They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}, made possible with their hidden states shortcuts.
+				A brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
 			\subsection{What is Attention ?}
 				\say{Attention mechanism was proposed for focusing attention on features that are relevant for the task to be recognized} \cite{sudhakaran2019lsta}.
 				We, humans, have the capacity to focus our {\itshape attention} into a small zone of our field of view.
 				Thus, it allows us to process only the information we need and make abstraction of the rest.
-				For example, while reading this, your attention is focused on these particular words and discard the surrounding ones even if they appear in your field of view.
+				For example, while reading this, your attention is focused on these words and discard the surrounding ones even if they appear in your field of view.
 				This way, it is easier for your mind to read.
 				Attention was first used in NLP to help auto-encoders for translating long sentences \cite{bahdanau2014neural}.
 				It has then been introduced in computer vision by \cite{xu2015show}, to help models for image captioning.
@@ -281,7 +298,12 @@
 				Then these weighted frames go through a ConvLSTM for classification.
 				These weighted frames are called {\itshape Spatial Attention Map}.
 		\section{Results and interpretation}
-			Lorem ipsum.
+			All the different architectures that we tried share the same frameworks:
+			\begin{itemize}
+				\item We draw 20 uniformly spaced RGB images from the action video that we feed.
+				\item Each image is fed to the pre-trained MobileNet V2.
+				\item The resulting feature maps are then either spacially averaged, for LSTM and temporal convolution, either directly sent to a ConvLSTM.
+			\end{itemize}
 		\section{Tools}
 			Lorem ipsum.
 	\chapter{Conclusion}
@@ -311,7 +333,32 @@
 				\includegraphics[width=0.3\textwidth]{imagenet2.jpeg},
 				\includegraphics[width=0.3\textwidth]{imagenet3.jpeg}}
 		\end{figure}
-	\chapter{Appendix B}
-		Lorem ipsum.
+	\chapter{Reccurent Neural Networks / Long-Short Term Memory}\label{appendix_b}
+		Processing time-sequence data with deep architectures has been challenging due to the necessity of incorporating a memory mechanism.
+		To handle this, Recurrent Neural Network (RNN) use a recursive loop over the sequence elements while maintaining a memory state called {\itshape hidden state} reffered as {\itshape $a^{<>}$} in Figure \ref{rnn}.
+		This hidden state is charged to keep information flowing through the network by being updated at every step.
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=1.\textwidth]{architecture-rnn-ltr.png}
+			\caption{RNN architecture.}
+			\url{https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks#architecture}
+			\label{rnn}
+		\end{figure}
+		A RNN cell, depicted in Figure \ref{rnn_cell}, uses {\itshape gates} to encode, update and reset information, the learnable weights are ({\itshape $W_{aa},W_{ax},W_{ya},b_{a},b_{y}$}).
+		\begin{figure}[h!]
+			\centering
+			\subfloat[RNN cell.]{\includegraphics[width=0.55\textwidth]{description-block-rnn-ltr.png}\label{rnn_cell}}
+			\hfill
+			\subfloat[LSTM cell.]{\includegraphics[width=0.4\textwidth]{lstm-ltr.png}\label{lstm_cell}}
+			\caption{Recurrent cells description.}
+		\end{figure}
+		\par
+		A successful implementation of RNN is called Long Short-Term memory \cite{Hochreiter1997lstm}.
+		Its particularity is that it implements not one but two states called {\itshape hidden} and {\itshape cell} states.
+		The purpose of the cell state in LSTM is to allow for long-term dependencies, inducing a long-term memory.
+		While their memory cell are more complex than RNN's, see Figure \ref{lstm_cell}, they exhibit most of the time better performance due to their ability to catch these long-term dependencies.
+		Note: the flow of information through the cell state, top line of \ref{lstm_cell}, has been shown to help counter gradient vanishing.
+	\chapter{Optical Flow fields}\label{appendix_c}
+		% TODO: mathematical development of the two methods in appendix
 	\makeutbmbackcover{}
 \end{document}

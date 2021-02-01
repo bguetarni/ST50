@@ -1,3 +1,6 @@
+Project repository: [ bguetarni /
+Egocentric-activity-recognition ](https://github.com/bguetarni/Egocentric-activity-recognition)
+
 # utbm-latex-internship-report-covers
 
 A LaTeX version of the UTBM internship report covers using TikZ.
@@ -5,8 +8,8 @@ A LaTeX version of the UTBM internship report covers using TikZ.
 You can compare [the original version](original-version.doc) and [the LaTeX version](latex-version.pdf).
 
 # Warning
+This is a forked repo from [utbm-latex-internship-report-covers](https://github.com/pinam45/utbm-latex-internship-report-covers).
 
-The LaTeX implementation I made is free but the covers belongs to the UTBM and can only be used with their authorization!
 
 **UTBM and all UTBM-related trademarks and logos are trademarks or registered trademarks of University of Technology of Belfort-Montbéliard in France, other countries, or both.**
 
