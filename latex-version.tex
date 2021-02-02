@@ -174,10 +174,10 @@
 					\par
 					Yet, processing the images separately prevent the model to use the temporal correlation of the images.
 					Even if we use optical flows, they describe an infinitesimal motion compared to the whole action motion.
-					In \cite{ye2019two}, this idea of using the temporal correlation of the images makes use of Recurrent Neural Networks (RNN) through ConvLSTM \cite{shi2015convolutional}.
+					In \cite{ye2019two}, this idea of using the temporal correlation of the images makes use of Recurrent Neural Networks (RNN) through a ConvLSTM \cite{shi2015convolutional}.
 					As originally developed, the Long Short-Term Memory (LSTM), that is discussed in \ref{lstm}, takes as input a sequence of vector and output a single vector.
-					However, as we consider images it would be a waste to shrink the images into vectors for feeding them to a LSTM; it will result in a loss of information.
-					To overcome this, Shi et al. \cite{shi2015convolutional} developed the ConvLSTM cell, that allows to process images inside a LSTM.
+					However, as we consider images it would be a waste to shrink the images into vectors for feeding them to a LSTM; because it would result in a loss of information.
+					To overcome this lost of information when using LSTM, \cite{shi2015convolutional} developed the ConvLSTM cell, that allows to process images inside a LSTM.
 					For this end, they replace the matrix product by a convolution.
 					This simple yet effective trick create a sort of Convolutional Recurrent Neural Network.
 					\par
@@ -189,9 +189,9 @@
 					Last but not least, Sudhakaran et al. \cite{sudhakaran2019lsta} pointed a major difficulty to action recognition in egocentric vision that is the \say{huge variations present in the data caused by the highly articulated nature of the human body}.
 					Along with this difficulty, they make the following assumption (that surely makes sense): \say{the discriminative information is often confined locally in the video frame [...] thus, not all convolutional features are equally important for recognition}.
 					From these, they derive an architecture that uses a widely studied mechanism nowadays, attention.
-					They incorporate this mechanism inside a ConvLSTM and achieve the best results to this date.
 					Simply put, they add a learnable mapping to weight the input feature maps before feeding them to the cell.
 					Additionally, the output gate uses a weighted version of the cell state rather than the sequence element.
+					They incorporate this mechanism with a ConvLSTM and achieve the best results to this date.
 			\subsection{EPIC-KITCHENS}
 				What would be deep learning without data ?
 				\par
@@ -204,6 +204,7 @@
 				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchens actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
 				This dataset has been published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS 55).
 				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS 100).
+				Splitted into tran and test sets, they represent: 
 				Not only it contains action recognition labels, but also action detection, action anticipation and several others challenges.
 				To this date, it's the biggest open egocentric action recognition dataset available.
 				\par
@@ -247,12 +248,12 @@
 						\caption{MobileNetV2 kernels visualization.}
 						\label{feature_visualization}
 					\end{figure}
-					In order to provide insight of what a deep ConvNet has learned, Olah et al. \cite{olah2017feature} developed the feature visualization tool.
+					In order to provide insight of what a deep ConvNet has learned, \cite{olah2017feature} developed the feature visualization tool.
 					Based on gradient ascent, this technique produces an image that will maximize the activations of a specific neuron (i.e. output of a single layer kernel convolution).
 					We can do this because:  \say{neural networks are, generally speaking, differentiable with respect to their inputs. If we want to find out what kind of input would cause a certain behavior — whether that’s an internal neuron firing or the final output behavior — we can use derivatives to iteratively tweak the input towards that goal.}
 					It is useful to visualize which features a kernel, and more generally a layer, is looking for.
 					\par
-					Already before, Erhan et al. \cite{erhan2009visualizing} applied this principle of activation maximization on different architectures trained on MNIST.
+					Already before, \cite{erhan2009visualizing} applied this principle of activation maximization on different architectures trained on MNIST.
 					They found that some of the resulting images \say{look like pseudo-digits}.
 					When trained on natural images, the first layer filters of these architectures, are \say{Gabor-like features}.
 					Combined with other results, they suggest that \say{higher level units did indeed learn meaningful combinations of lower level features}.
@@ -305,26 +306,27 @@
 					\item Each image is fed to the pre-trained MobileNet V2.
 					\item The resulting feature maps are then either spacially averaged either directly sent to the temporal processing subsystem.
 					\item Finally, we use 2 fully-connected layers to compute the {\itshape verb} and {\itshape noun} probability distributions.
-					\item The error backpropagation is applied to the temporal processing subsystem only.
+					\item The error backpropagation is applied to the fully-connected layers and the temporal processing only (red box in Figure \ref{common_base}).
 				\end{enumerate}
 				\begin{figure}[h!]
 					\centering
-					\subfloat{\includegraphics[width=1.2\textwidth]{architecture_diagr_1.png}\label{common_base}}
+					\subfloat{\includegraphics[width=1.2\textwidth]{architecture_diagr.png}\label{common_base}}
 					\caption{Common base.}
 				\end{figure}
-				We use the categorical cross-entropy error between predicted and ground-truth labels.
+				We use the cross-entropy error between predicted and ground-truth labels.
 				\begin{align*}
-					L^{verb} = -\sum_{i} y^{verb}_{i}log(\hat{y}^{verb}_{i}) \\
-					L^{noun} = -\sum_{i} y^{noun}_{i}log(\hat{y}^{noun}_{i}) \\
-					Loss = L^{verb} + L^{noun} \\
+					L_{verb} = -\sum_{i} y^{verb}_{i}log(\hat{y}^{verb}_{i}) \\
+					L_{noun} = -\sum_{i} y^{noun}_{i}log(\hat{y}^{noun}_{i}) \\
+					Loss = L_{verb} + L_{noun} \\
 				\end{align*}
-				where $y$ and $\hat{y}$ are the ground-truth and prediction respectively.
+				where $y$ and $\hat{y}$ are the ground-truth and model prediction respectively.
 			\subsection{Temporal process subsystem}\label{lstm}
 				\subsubsection{LSTM}\label{lstm}
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
 					Their ability to propagate information during the inference is particularly appreciated.
 					They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}, made possible with their hidden states shortcuts.
 					A brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
+					Despite their success, LSTM are also known to expose chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent} which made them difficult to train, especially with little data.
 				\subsubsection{ConvLSTM}
 					Lorem ipsum.
 				\subsubsection{ConvNet1D}
@@ -346,7 +348,7 @@
 			Lorem ipsum.
 		\section{Acquired knowledge and skills}
 			Lorem ipsum.
-	\bibliographystyle{unsrt}
+	\bibliographystyle{apalike}
 	\bibliography{bibliography}
 	\appendix
 	\chapter{ImageNet and EPIC-KITCHENS comparisons}\label{appendix_a}
