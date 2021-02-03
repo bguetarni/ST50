@@ -159,11 +159,11 @@
 					Two types of optical flows exist: {\itshape sparse} and {\itshape dense}.
 					Sparse optical flows track distinct pixels among the images using feature selectors (e.g. Harris corner detector) and computes their displacement.
 					On the other hand, dense optical flows are a per-pixel-motion estimate method.
-					Here, we'll consider the latter one; see Appendix \ref{appendix_c} for mathematical description.
+					Here, we'll consider the latter one; see Appendix \ref{appendix_c} for some examples.
 					There are several methods to compute dense optical flows, but the most known (and used) are the TV-L1 \cite{perez2013tv} and the Gunner Farnebäck \cite{farneback2003two} algorithms.
 					\par
 					Nowadays, even deep learning is considered for modeling optical flows \cite{hur2020optical}.
-				\subsubsection{Literature}
+				\subsubsection{Literature}\label{literature}
 					In \cite{wang2016temporal}, two Convolutional Neural Networks (CNN or ConvNet, they'll be used interchangeably but are the same thing) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
 					The two-stream are identical except for the number of features expected for the input.
 					The first one expect RGB images, which makes 3 features, while the second one expect stacked optical flows (2 or more features).
@@ -323,14 +323,66 @@
 			\subsection{Temporal process subsystem}\label{lstm}
 				\subsubsection{LSTM}\label{lstm}
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
-					Their ability to propagate information during the inference is particularly appreciated.
+					Their ability to propagate information during the inference is particularly appreciated as well as their independence of the sequence length, indeed the weights are shared across the sequence elements (which required the introduction of the {\itshape backpropagation through time} algorithm).
 					They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}, made possible with their hidden states shortcuts.
 					A brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
-					Despite their success, LSTM are also known to expose chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent} which made them difficult to train, especially with little data.
+					Despite their success, LSTM are also known to encounter chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent} which make them difficult to train, especially with little data.
+					Albeit these difficulties, we still tried to use LSTM because of its popularity.
 				\subsubsection{ConvLSTM}
-					Lorem ipsum.
+					As mentioned in \ref{literature}, ConvLSTM were designed to counter the inability of LSTM for image analysis.
+					Indeed, LSTM works with vectors only, which constrain us to shrink the images (or feature maps) into vectors, wether by flattening or applying spatial pooling.
+					However these operations result in a loss of information, sometimes to the detriment of useful information.
+					ConvLSTM is a good alternative that comes with all the potential of a CNN fused with the recurrence ability of LSTM.
+					However, one must consider that by using images, we drastically augment the number of parameters needed in the ConvLSTM.
+					As an example if we consider a sequence of $N*256*256$ RGB images going through MobileNetV2, we recover a sequence of $N*8*8$ feature maps with $1280$ channels each one.
+					To send this through a LSTM, one must beforehand apply a spatial pooling to shrink those feature maps into $1*1$.
+					This sequence of vectors ($N*1*1*1280 \Leftrightarrow N*1280$) is then fed to a LSTM which output a feature vector with, let's say, 50 features.
+					This LSTM will then have ~266K parameters.
+					If we do the same with a ConvLSTM, meaning we don't have to apply spatial average beforehand, that takes the $N*8*8*1280$ feature maps and use 50 kernels of size $4*4$ with a stride of 4 (as an example), it will result in an output of size $2*2*50$, thus requiring to apply spatial pooling before any fully connected layer; however applying spatial pooling on a $2*2$ result in less loss information than on $8*8$.
+					This ConvLSTM will unfortunately have ~4.2M parameters, which is more than 15 times bigger than the LSTM, while both result in a feature vector of dimension 50.
+					\begin{figure}[h!]
+						\centering
+						\subfloat[]{\includegraphics[width=0.47\textwidth]{compare_50.png}\label{comparison_50}}
+						\hfill
+						\subfloat[]{\includegraphics[width=0.47\textwidth]{compare_100.png}\label{comparison_100}}
+						\vfill
+						\subfloat[]{\includegraphics[width=0.47\textwidth]{compare_200.png}\label{comparison_200}}
+						\hfill
+						\subfloat[]{\includegraphics[width=0.47\textwidth]{compare_300.png}\label{comparison_300}}
+						\caption{Comparison of differents aspects between LSTM and ConvLSTM.}
+						\label{comparison}
+					\end{figure}
+					\par
+					To compare, we provide a graphical illustration, Figure \ref{comparison}, of different values such as:
+					\begin{itemize}
+						\item {\itshape time}: the time required to infer on one sample (milliseconds)
+						\item {\itshape sequence length}
+						\item {\itshape size}: number of parameters (rounded to the million)
+					\end{itemize}
+					The computations were done on GoogleColab using an NVIDIA Tesla K80.
+					The Figure \ref{comparison_50} represent the computation time as function of the sequence length, sequences of $8*8*1280$ images (or feature maps), where the output dimension is 50.
+					Figures \ref{comparison_100}, \ref{comparison_200} and \ref{comparison_300} are similar but with an output dimension of 100, 200, and 300 respectively.
+					We can see that the advantage of the ConvLSTM over LSTM is rapidly taken over by the computation time and number of parameters to train.
+					In our studies, we used a ConvLSTM layer with 8 kernels of size $4*4$.
+					We also chosen a stride of 4, to avoid losing too much during the spatial pooling afterwards.
+					\par
+					Except for the convolutions, the internal structure is the same as LSTM (see appendix \ref{appendix_b}).
 				\subsubsection{ConvNet1D}
-					Lorem ipsum.
+					Before using these RNN architectures to manipulate time-series data, a different approach was to use 1D convolutions, also called {\itshape temporal convolutions}.
+					It consists of taking a sequence of feature vectors and applying 1D convolution(s).
+					The kernel size of the convolution define the perception window of the convolution over time, i.e. how many seconds (or milliseconds) of the action the convolution is looking at.
+					The advantage of temporal convolutions is the possibility to decompose the temporal processing in many depth levels.
+					Rather than taking the kernel size being equal to the sequence length, which enforce it to extract the temporal correlations in one step, we can decompose the extraction in many depth levels as is illustrated in Figure \ref{temp_conv}.
+					On the left we have a 1 level deep temporal convolution which have to extract the temporal correlations in one convolution, whereas on the right we increase the depthness to construct a hierarchical extraction of the temporal correlations.
+					Notice that the circles are actually vectors here.
+					\begin{figure}[h!]
+						\centering
+						\includegraphics[width=0.8\textwidth]{temporal_convolution.png}
+						\caption{Temporal convolutions of different depth.}\label{temp_conv}
+					\end{figure}
+					\par
+					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling, and feed the resulting feature vectors to a CNN od 1D convolutions.
+					In our studies, this {\itshape ConvNet1D} consists of a following of $3*3$ 1D convolutions with batch normalization and LeakyReLU activations.
 		\section{Results and interpretation}
 			Lorem ipsum.
 		\section{Tools}
@@ -371,25 +423,57 @@
 		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=1.\textwidth]{architecture-rnn-ltr.png}
-			\caption{RNN architecture.}
-			\url{https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks#architecture}
+			{\tiny \url{https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks}}
+			\caption{vanilla RNN architecture.}
 			\label{rnn}
 		\end{figure}
-		A RNN cell, depicted in Figure \ref{rnn_cell}, uses {\itshape gates} to encode, update and reset information, the learnable weights are ({\itshape $W_{aa},W_{ax},W_{ya},b_{a},b_{y}$}).
+		A RNN cell, depicted in Figure \ref{rnn_cell}, uses {\itshape gates} to encode, update and reset information; the learnable weights are ({\itshape $W_{aa},W_{ax},W_{ya},b_{a},b_{y}$}).
 		\begin{figure}[h!]
 			\centering
-			\subfloat[RNN cell.]{\includegraphics[width=0.55\textwidth]{description-block-rnn-ltr.png}\label{rnn_cell}}
+			\subfloat[vanilla RNN cell.]{\includegraphics[width=0.55\textwidth]{description-block-rnn-ltr.png}\label{rnn_cell}}
 			\hfill
 			\subfloat[LSTM cell.]{\includegraphics[width=0.4\textwidth]{lstm-ltr.png}\label{lstm_cell}}
 			\caption{Recurrent cells description.}
 		\end{figure}
 		\par
 		A successful implementation of RNN is called Long Short-Term memory \cite{Hochreiter1997lstm}.
-		Its particularity is that it implements not one but two states called {\itshape hidden} and {\itshape cell} states.
+		Its particularity is that it implements not one but two states called {\itshape hidden} ($a_{t}$) and {\itshape cell} ($c_{t}$) states.
 		The purpose of the cell state in LSTM is to allow for long-term dependencies, inducing a long-term memory.
 		While their memory cell are more complex than RNN's, see Figure \ref{lstm_cell}, they exhibit most of the time better performance due to their ability to catch these long-term dependencies.
 		The flow of information through the cell state, top line of \ref{lstm_cell}, has been shown to help counter gradient vanishing.
+		\par
+		LSTM equations:
+		\begin{align*}
+			& \Gamma_{f} = \sigma(W_{f}x_{t} + U_{f}a_{t-1} + b_{f}) \\
+			& \Gamma_{u} = \sigma(W_{u}x_{t} + U_{u}a_{t-1} + b_{u}) \\
+			& \Gamma_{r} = \sigma(W_{r}x_{t} + U_{r}a_{t-1} + b_{r}) \\
+			& \Gamma_{o} = \sigma(W_{o}x_{t} + U_{o}a_{t-1} + b_{o}) \\
+			& \tilde{c}_{t} = tanh(W_{c}[\Gamma_{r} \circ a_{t-1},x_{t}] + b_{c}) \\
+			& c_{t} = \Gamma_{f} \circ c_{t-1} + \Gamma_{u} \circ \tilde{c}_{t} \\
+			& a_{t} = \Gamma_{o} \circ tanh(c_{t})
+		\end{align*}
+		where $\sigma$ is the sigmoid activation function, $tanh$ the hyperbolic tangent function, $\circ$ denotes the Hadamard or element-wise product and the learnable weights (and biases) are $W$, $U$ and $b$.
+		($\Gamma_{f}$, $\Gamma_{u}$, $\Gamma_{r}$, $\Gamma_{o}$) are the LSTM gates and their purpose is to forget, update, reset and reveal the information respectively.
+		At the first step, $c_{0}$ and $a_{0}$ are set to 0.
 	\chapter{Optical Flow fields}\label{appendix_c}
-		% TODO: mathematical development of the two methods in appendix
+		We provide some examples of visualization of optical flow between two RGB images ($I_{1}$ and $I_{2}$).
+		For this we have to understand that (dense) optical flows are per-pixel motion estimation, which result to an horizontal and vertical motions.
+		Thus, they are computed as an horizontal, called {\itshape u}, and vertical, called {\itshape v}, displacements.
+		To combine these two, we can computes the magnitude of the optical flow field, which is $m = \sqrt{u^{2} + v^{2}}$.
+		All of these are shown in Figure \ref{optical_flow}.
+		\begin{figure}[h!]
+			\centering
+			\subfloat[$I_{1}$]{\includegraphics[width=0.35\textwidth]{opticalflow/rgb1.png}}
+			\hfill
+			\subfloat[$I_{2}$]{\includegraphics[width=0.35\textwidth]{opticalflow/rgb2.png}}
+			\vfill
+			\subfloat[$u$]{\includegraphics[width=0.35\textwidth]{opticalflow/u.jpg}}
+			\hfill
+			\subfloat[$v$]{\includegraphics[width=0.35\textwidth]{opticalflow/v.jpg}}
+			\vfill
+			\subfloat[$m$]{\includegraphics[width=0.3\textwidth]{opticalflow/uv.png}}
+			\caption{Optical flow field example.}\label{optical_flow}
+		\end{figure}
+
 	\makeutbmbackcover{}
 \end{document}
