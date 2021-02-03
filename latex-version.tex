@@ -73,32 +73,32 @@
 	
 	\chapter*{Acknowledgements}
 	\addcontentsline{toc}{chapter}{\numberline{}Acknowledgements}
-	I would like to express my deep gratitude to the Haute École d'Ingénierie et de Gestion du Canton de Vaud for receiving me during this internship and particulary to the International Office for providing me support, dedication and availability in these particular times.
-	I would also like to thank the Communauté du Savoir that makes these extraterritorial cooperation possible that allows students to benefit from other universities education.
-	Finally, I am particularly grateful to Mr. Andres PEREZ-URIBE and all his team, for all the advices, support and teaching they enthusiastically gave me.
+	I would like to express my deep gratitude to the Haute École d'Ingénierie et de Gestion du Canton de Vaud (HEIG-VD) for receiving me during this internship and particulary to the International Office for providing me support, dedication and availability in these particular times.
+	I would also like to thank the Communauté du Savoir that makes these extraterritorial cooperation possible that allow students to benefit from other universities education.
+	Finally, I am particularly grateful to Mr. Andres PEREZ-URIBE and all his team, for all the advices, support and teaching they gave me.
 	I adress them my very great appreciation for the assistance and the kindness they showed to me and the time they consecrated for my project.
 	\chapter{Introduction}
 		\section{Institut des Technologies de l’Information et de la Communication}
-			The {\itshape Institut des Technologies de l’Information et de la Communication} (IICT) is the biggest research institute of the Haute École d'Ingénierie et de Gestion du Canton de Vaud (HEIG-VD) with more than 50 researchers and engineers and near 20 teachers.
+			The {\itshape Institut des Technologies de l’Information et de la Communication} (IICT) is the biggest research institute of the HEIG-VD university with more than 50 researchers and engineers and near 20 teachers.
 			Its research is divided into software engineering, telecommunications, artifical intelligence, digital security and communication systems.
 			They realize each year more than 60 projects, mostly with industrials.
 			\par
-			In this institut work the professor Andres PEREZ-URIBE and his team, the Intelligent Data Analysis group, on big data analysis and intelligent data analysis.
+			In this institut work the professor Andres PEREZ-URIBE and his team, the Intelligent Data Analysis group, on big data and intelligent data analysis.
 			This team \say{works on making sense of data by developing and using data-driven models using Machine Learning approaches (including artificial intelligence, artificial life and bio-inspired approaches) as an alternative to analytical models for classification, prediction, explanation and visualization}.
 			They \say{aim at providing solutions to deal with the current scenario of "data deluge" (Big Data) and to provide innovative solutions for the new ubiquitous computing world (Internet of Things and Quantified Self)}.
-			They developped several applications based on intelligent systems as:
+			They developed several applications based on intelligent systems as:
 			\begin{itemize}
 				\item \href{http://iict.heig-vd.ch/projets#/49/agrovision-developpement-dun-outil-de-suivi-base-sur-limagerie-aerienne-a-haute-resolution-pour-une-meilleure-gestion-agronomique-et-environnementale-de-lagriculture}{Agrovision}: an aerial image based tool for agriculture monitoring.
 				\item \href{http://iict.heig-vd.ch/projets#/47/clustersitg-semantic-analysis-and-clustering-of-sitg-catalogue}{ClusterSITG}: an automatic tool for metadata organization.
 				\item \href{http://iict.heig-vd.ch/projets#/43/crowdstreams-analyse-et-surveillance-en-temps-r-el-de-mobilit-la-proximit-des-grands-v-nements}{CrowdStreams}: an application for crowd analyze and monitoring.
 			\end{itemize}
 		\section{Internship context}
-			Since the availability of huge data bases, modern deep learning has been applied on several tasks with amazing performance.
+			Since the availability of huge databases, modern deep learning has been applied on several tasks with amazing performance.
 			One of such tasks is action recognition.
-			There have been considerable researchs on this topic using deep learning, but the lack of relatively large scaled datasets have limited the possibilities to develop supervised learning solutions.
-			Rencently, there have been considerable works to create such datasets, thus, the exploration of deep learning architectures for action recognition has began.
-			There is a dataset that concentrates on actions performed in a kitchen where the objective is to recognize a performed action (through a video) in a first person view, also called egocentric vision.
-			The purpose of this internship is to create a deep learning system that is able to recognize the actions present in the dataset with the highest accuracy possible.
+			There have been considerable research on this topic using deep learning, but the lack of relatively large scaled datasets have limited the possibilities to develop supervised learning solutions.
+			Recently, there have been considerable works to create such datasets, launching the exploration of deep learning architectures for action recognition.
+			There exist a dataset, centred on actions performed in kitchen environments where the objective is to recognize a performed action (in a video) in a first person view, also called \gls{ego}.
+			The purpose of this project is to create a deep learning system that is able to recognize the actions present in the dataset with the highest accuracy possible.
 			\par
 			\bigbreak
 			We will first describe the relationship between deep learning and computer vision to understand which important part the first has became to the latter.
@@ -112,20 +112,20 @@
 		\section{Deep Learning and Computer Vision}
 			Deep Learning is a really successful field that is currently under innumerable investigations.
 			Despite the well-known difficulties associated, numerous people jump into it every day.
-			It has been successfully applied to several domains like Computer Vision, \gls{nlp} (NLP), board games and a raft of others.
+			It has been successfully applied to several domains like Computer Vision, \gls{nlp} (NLP), board and video games and a raft of others.
 			The first one is currently the most explored with a lot of academic research associated with huge industrial applications.
 			Deep learning has revolutionized the field of computer vision by its accuracy never reached by classical algorithms.
 			From the beginning, computer vision played an important role in the development of deep learning \cite{lecun1989backpropagation,lecun1998gradient,fukushima1981neocognitron}.
 			However, it suffers from a major drawback, that is its need of enormous datasets.
 			As the tasks tackled become more and more complex, the systems need more and more data to reach an acceptable accuracy.
 			Also, most systems for computer vision are trained in a supervised learning fashion which requires data to be labeled, and for some tasks it is really hard to find such ones (even if synthetic data can be used, this still raise the problem of \gls{synthdata}).
-			Moreover, the more data we have, the more computations are then needed, and we know that recent deep learning systems can take several weeks to train.
+			Moreover, the more data we have, the more computations are then needed, and we know that recent deep learning systems take a long time to train.
 			\par
 			Despite those drawbacks, and because several workarounds have been developed, deep learning is still seen as a powerful tool to enhance our systems.
 			\subsection*{Action recognition}
-				Content recognition is at the heart of the deep learning literature since the beginning. It began with numbers \cite{fukushima1981neocognitron,lecun1998gradient}, animals (e.g. cats for the most popular one) and more recently complex concepts such as actions.
+				Content recognition is at the heart of the deep learning literature since the beginning. It began with numbers \cite{fukushima1981neocognitron,lecun1998gradient}, animals (e.g. cats and dogs) and more recently complex concepts such as actions.
 				Human action recognition requires developing systems that can capture motion over time (sequence prediction), or systems that can recognize an action through a single frame.
-				The first case has seen emerged novels architecture as 3D convolutional networks \cite{ji20123d} and two-stream architectures \cite{sudhakaran2019lsta,wang2016temporal,ye2019two} (see \ref{twostream}).
+				The first case has seen the emergence of new architectures as 3D convolutional networks \cite{ji20123d} and two-stream architectures \cite{sudhakaran2019lsta,wang2016temporal,ye2019two} (see \ref{twostream}).
 				It is worth to notice that action recognition is itself split in two categories: first person view, also known as \gls{ego} (Figure \ref{firstperson}), and third person view (Figure \ref{thirdperson}); in this work, we focus on egocentric view action recognition.
 				If we look in the literature, we'll see that egocentric vision has been neglected over third person view for a long time.
 				Nonetheless, large scaled recently published datasets have exposed the egocentric view problematic and encouraged research for.
@@ -136,7 +136,7 @@
 					\subfloat[Third person.]{\includegraphics[width=0.4\textwidth]{thirdperson.jpg}\label{thirdperson}}
 					\caption{Action views.}
 				\end{figure}
-				A similar task that is increasingly covered is image captioning \cite{xu2015show}, where a model try to add a caption to an image; which is highly related to scene understanding.
+				A similar task that is increasingly covered is image captioning \cite{xu2015show}, where a system try to add a caption to an image; which is related to scene understanding.
 				It is easy to see that they are sensibly similar and actually, many advances that came out for image captioning are now used for action recognition (attention mechanism, recurrent neural networks).
 				\subsection*{Some applications}
 					Among the different applications of action recognition we find patient follow-up.
@@ -147,14 +147,13 @@
 		\section{State-of-the-art}
 			In this chapter we introduce the state-of-the-art of the egocentric action recognition literature.
 			We'll describe a particular architecture that a majority of papers have focused on; for a specific reason.
-			Furthermore, we'll see how different approaches, currently under investigation, taken from NLP have achieved considerable performance.
+			Furthermore, we'll see how different approaches, currently under investigation, taken from \gls{nlp} have achieved considerable performance.
 			\subsection{Two-stream architectures}\label{twostream}
 				Currently, the most used architecture for action recognition is the so-called two-stream architecture.
 				It consists of two subsystems, each one processing different image modalities.
 				\subsubsection{Optical flows}
 					As said in the introduction of this chapter, to recognize an action it is almost necessarily to capture the motion.
-					This problematic of describing motion has been extremely present in the computer vision literature.
-					It gave rise to optical flows, sometimes also called optical flow fields.
+					This problematic of describing motion has been extremely present in the computer vision literature and it gave rise to optical flows, sometimes also called optical flow fields.
 					An optical flow is, most of the time, computed as a shift between two gray images.
 					Two types of optical flows exist: {\itshape sparse} and {\itshape dense}.
 					Sparse optical flows track distinct pixels among the images using feature selectors (e.g. Harris corner detector) and computes their displacement.
@@ -164,7 +163,7 @@
 					\par
 					Nowadays, even deep learning is considered for modeling optical flows \cite{hur2020optical}.
 				\subsubsection{Literature}\label{literature}
-					In \cite{wang2016temporal}, two Convolutional Neural Networks (CNN or ConvNet, they'll be used interchangeably but are the same thing) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
+					In \cite{wang2016temporal}, two Convolutional Neural Networks (CNN or ConvNet, they'll be used interchangeably but describe the same thing) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
 					The two-stream are identical except for the number of features expected for the input.
 					The first one expect RGB images, which makes 3 features, while the second one expect stacked optical flows (2 or more features).
 					Random RGB images and optical flows are drawn from the action video and fed to their corresponding CNN.
@@ -182,9 +181,9 @@
 					This simple yet effective trick create a sort of Convolutional Recurrent Neural Network.
 					\par
 					Later on, \cite{ye2019two} used a ResNet-101 pre-trained on ImageNet as feature extractor.
-					As the others, this ConvNet is duplicate to use RGB frames and optical flows.
-					The resulting feature maps of the two modes, are fused using different strategies.
-					A ConvLSTM processes the sequence before a final fully-connected layer.
+					As the others, this ConvNet is duplicated to use RGB frames and optical flows.
+					The resulting feature maps of the two modes are then fused using different strategies.
+					A ConvLSTM processes the sequence of fused feature maps before a final fully-connected layer.
 					\par
 					Last but not least, Sudhakaran et al. \cite{sudhakaran2019lsta} pointed a major difficulty to action recognition in egocentric vision that is the \say{huge variations present in the data caused by the highly articulated nature of the human body}.
 					Along with this difficulty, they make the following assumption (that surely makes sense): \say{the discriminative information is often confined locally in the video frame [...] thus, not all convolutional features are equally important for recognition}.
@@ -195,20 +194,20 @@
 			\subsection{EPIC-KITCHENS}
 				What would be deep learning without data ?
 				\par
-				From the very beginning, people have been struggling to push deep architectures into configuration with acceptable accuracy.
+				From the very beginning, people have been struggling to push deep architectures into configurations with acceptable accuracy.
 				Researchers claim that the more data is gathered for training, the likeliest the model will converge.
 				However, certain problems require labels that are either complex or long to get.
 				For example, image segmentation requires that every pixels of an object is labeled within its category, and this, for all objects in every images.
-				This reflects the difficulty to produce accurate and large scaled datasets for supervised learning.
+				On the other hand, action recognition requires to associate an action for every frame of video; we can still get around this by associating labels to a timelapse which contains an action.
+				This reflects the difficulty to produce accurate and large scaled datasets for supervised learning tasks.
 				\par
-				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchens actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
-				This dataset has been published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS 55).
-				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS 100).
-				Splitted into tran and test sets, they represent: 
+				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchen actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
+				This dataset has been first published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS 55).
+				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS 100) splitted into train (75\%), validation (10\%) and test (15\%) sets.
 				Not only it contains action recognition labels, but also action detection, action anticipation and several others challenges.
 				To this date, it's the biggest open egocentric action recognition dataset available.
 				\par
-				Each action is delimited in time by is frames, and is labeled with a {\itshape verb} and a {\itshape noun} (see Figure \ref{close_refrigerator}).
+				Each action is delimited by its frames and timesteps in the video, and is labeled with a {\itshape verb} and a {\itshape noun} (see Figure \ref{close_refrigerator}).
 				\begin{figure}[h!]
 					\centering
 					\subfloat{\includegraphics[width=0.55\textwidth]{close_refrigerator.jpg}\label{close_refrigerator}}
@@ -216,25 +215,27 @@
 				\end{figure}
 				The biggest advantage of using this dataset is its natural looking data.
 				The videos were recording by researchers, engineers, students and other people, in their kitchens while they were doing daily activities like: cooking, cleaning, etc.
-				The resulting data has a very natural aspect which makes it suitable to train models for real world deployment.
+				The resulting data have a very natural aspect which makes it suitable to train models with real world environments knowledge.
 				However using a big dataset implies a finest management of the memory.% TODO: link to the RAM usage consideration
 				A major drawback that natural data contained is the biased proportion between labels.
-				For any activity, all actions that we do are not uniformly distributed, and this is illustrated by the instances of each verb class of EPIC-KITCHENS 55 in Figure \ref{epic_55_imbalance}; the same problem occur for the noun classes.
+				For any activity, all actions that we do are not uniformly distributed in time.
+				This is illustrated by the proportion of samples of each verb class in EPIC-KITCHENS 55 in Figure \ref{epic_55_imbalance}; the same problem occur for the noun classes.
 				\begin{figure}[h!]
 					\centering
 					\includegraphics[width=0.85\textwidth]{EPIC-55 data imbalance.png}
 					\caption{EPIC-KITCHENS 55 verbs instances.}
 					\label{epic_55_imbalance}
 				\end{figure}
-				This class imbalance produces highly biased models toward the most representated classes.
+				This class imbalance produces highly biased models toward the most represented classes in the data.
 		\section{Studied methods}
 			\subsection{Transfer Learning}
 				As ConvNet architectures have become bigger and bigger over the past 20 years, the time and amount of computations to train these networks grew exponentially.
-				Therefore, people searched for a way to reduce this training time and eventually recycle the learned knowledge, which gave rise to Transfer Learning.
+				Therefore, people searched for a way to reduce this training time and eventually recycle the learned knowledge, by transferring them from a domain to another.
+				It's called Transfer Learning.
 				The main argument of this practice is that big ConvNets layers, when trained on big dataset, will learn different features depending on their position in the architecture.
 				Early layers tend to learn basic features such as: edge detectors, Gabor filters, etc.
-				And the deeper we go in the archietecture, the more complex these features become.
-				To proof this we provide what is called {\itshape feature visualization} of different kernels of MobileNetV2 in Figure \ref{feature_visualization}.
+				And the deeper we go in the architecture, the more complex these features become.
+				To proof this, we provide what is called a {\itshape feature visualization} of different kernels of MobileNetV2 in Figure \ref{feature_visualization}; the reason why MobileNetV2 is given later.
 				\subsubsection{Feature visualization}
 					\begin{figure}[h!]
 						\centering
@@ -249,20 +250,20 @@
 						\label{feature_visualization}
 					\end{figure}
 					In order to provide insight of what a deep ConvNet has learned, \cite{olah2017feature} developed the feature visualization tool.
-					Based on gradient ascent, this technique produces an image that will maximize the activations of a specific neuron (i.e. output of a single layer kernel convolution).
-					We can do this because:  \say{neural networks are, generally speaking, differentiable with respect to their inputs. If we want to find out what kind of input would cause a certain behavior — whether that’s an internal neuron firing or the final output behavior — we can use derivatives to iteratively tweak the input towards that goal.}
-					It is useful to visualize which features a kernel, and more generally a layer, is looking for.
+					Based on gradient ascent, this technique produces an image that will maximize the activation of a specific neuron (i.e. output of a single kernel convolution).
+					We can do this because: \say{neural networks are, generally speaking, differentiable with respect to their inputs. If we want to find out what kind of input would cause a certain behavior — whether that’s an internal neuron firing or the final output behavior — we can use derivatives to iteratively tweak the input towards that goal.}
+					It is useful to visualize which features a kernel, and more generally a layer, is looking for, because it provides information of the role of this layer in the architecture.
 					\par
 					Already before, \cite{erhan2009visualizing} applied this principle of activation maximization on different architectures trained on MNIST.
 					They found that some of the resulting images \say{look like pseudo-digits}.
-					When trained on natural images, the first layer filters of these architectures, are \say{Gabor-like features}.
+					When trained on natural images, the first layer filters were similar to \say{Gabor-like features}.
 					Combined with other results, they suggest that \say{higher level units did indeed learn meaningful combinations of lower level features}.
-				Knowing this, we can assume that the early features are common features to every sort of task.
+				Knowing this, we can assume that the early features of a ConvNet are common features to every sort of task.
 				Then we can reuse these trained models knowledge for other tasks; this is what transfer learning is all about, transfering knowledge from a domain to another.
 				\par
-				We provide such feature visualization for the first, fourth, eihgth and twelfth blocks, respectively, of MobileNetV2 in Figure \ref{feature_visualization}.
-				We clearly see that in block 1 (\ref{block1}), the features are edge detectors associated with high frequencies patterns.
-				Deeper, in block 4 (\ref{block4}), we see more complex features, but still, they seem to be a combination of the previous basic features.
+				We provide such feature visualization for the first, fourth, eihgth and twelfth blocks, respectively, of MobileNetV2 in Figure \ref{feature_visualization}; a block is a serie of convolutions, batch normalization and activation function.
+				We clearly see that in block 1 (\ref{block1}), the features are edge detectors associated with high frequency patterns.
+				Deeper, in block 4 (\ref{block4}), we see more complex features, but still, they seem to be a basic combination of the previous basic features.
 				And if we go even deeper, in blocks 8 and 12 (\ref{block8} and \ref{block12} respectively), the observed features are far more complex and are probably revealing what type of features one can encounter in ImageNet images.
 				\par
 				Based on these visuals and the previous assumptions, we first attempted to use the 9 first blocks of MobileNetV2, pre-trained on ImageNet, as feature extractor for our architectures.
@@ -270,16 +271,16 @@
 				We provide in appendix \ref{appendix_a}, examples of both datasets to see how different they are.
 				Even if basic features are shared (edges, corners...), we thought that the high-level features to extract are not transferable from ImageNet to EPIC-KITCHENS.
 				\par
-				{\boldtahomafont MobileNet V2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge devices utilization.
-				Modern deep networks have millions of parameters, and they are trained with modern technologies as GPU and TPU.
+				{\boldtahomafont MobileNetV2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge device utilization.
+				Modern deep networks have millions of parameters, and they are trained with modern technologies like GPU and TPU.
 				However, embedding such networks in devices with limited computation power implies to minimize the computations, especially for real-time solutions.
-				MobileNet is a deep ConvNet made of several residual blocks, similarly to ResNet, which has been shown to help with gradient vanishing and exploding.
+				MobileNetV2 is a deep ConvNet made of several residual blocks, similarly to ResNet \cite{he2015deep}, which has been shown to help with vanishing and exploding gradient.
 				It has the advantage of decomposing convolutions in two stages, first a depthwise convolution which processes one convolution per channel, and then a pointwise convolution that combines the channels.
 				This reduces the computations by almost a factor of $k^{2}$, where $k$ is the kernel size.
 				It contains a total of 16 blocks with an incremental number of features (24, 32, 64, ..., 320).
 				The final convolution, after the last block, outputs 1280 features.
 				From the beginning of the project, we intended to, if a model was successful enough, use it in an edge device with real-time predictions.
-				Thus, we designed our architectures using MobileNet V2 pre-trained on ImageNet as a feature extractor.
+				Thus, we designed our architectures using MobileNetV2 pre-trained on ImageNet as a feature extractor.
 			%\subsection{Attention}
 			%	\say{Attention mechanism was proposed for focusing attention on features that are relevant for the task to be recognized} \cite{sudhakaran2019lsta}.
 			%	We, humans, have the capacity to focus our {\itshape attention} into a small zone of our field of view.
@@ -302,10 +303,10 @@
 			\subsection{Architectures base}
 				All the different architectures that we tried share a common base (drawn in Figure \ref{common_base}):
 				\begin{enumerate}
-					\item We draw 20 uniformly spaced RGB images ($N=20$) from the action video that we feed.
+					\item We draw 20 uniformly spaced RGB images ($N=20$) from the action video.
 					\item Each image is fed to the pre-trained MobileNet V2.
-					\item The resulting feature maps are then either spacially averaged either directly sent to the temporal processing subsystem.
-					\item Finally, we use 2 fully-connected layers to compute the {\itshape verb} and {\itshape noun} probability distributions.
+					\item The resulting feature maps are then fed sent to a temporal processing subsystem; a spatial pooling must be applied beforehand in some cases.
+					\item Finally, we use 2 fully-connected layers to output the {\itshape verb} and {\itshape noun} probability distributions.
 					\item The error backpropagation is applied to the fully-connected layers and the temporal processing only (red box in Figure \ref{common_base}).
 				\end{enumerate}
 				\begin{figure}[h!]
@@ -313,7 +314,7 @@
 					\subfloat{\includegraphics[width=1.2\textwidth]{architecture_diagr.png}\label{common_base}}
 					\caption{Common base.}
 				\end{figure}
-				We use the cross-entropy error between predicted and ground-truth labels.
+				We use the cross-entropy error between predicted and ground-truth labels as error function and the Adam optimizer.
 				\begin{align*}
 					L_{verb} = -\sum_{i} y^{verb}_{i}log(\hat{y}^{verb}_{i}) \\
 					L_{noun} = -\sum_{i} y^{noun}_{i}log(\hat{y}^{noun}_{i}) \\
@@ -324,21 +325,20 @@
 				\subsubsection{LSTM}\label{lstm}
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
 					Their ability to propagate information during the inference is particularly appreciated as well as their independence of the sequence length, indeed the weights are shared across the sequence elements (which required the introduction of the {\itshape backpropagation through time} algorithm).
-					They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}, made possible with their hidden states shortcuts.
-					A brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
-					Despite their success, LSTM are also known to encounter chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent} which make them difficult to train, especially with little data.
+					They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}; a brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
+					Despite their success, LSTM are also known to encounter chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent}, which make them difficult to train with little data.
 					Albeit these difficulties, we still tried to use LSTM because of its popularity.
 				\subsubsection{ConvLSTM}
-					As mentioned in \ref{literature}, ConvLSTM were designed to counter the inability of LSTM for image analysis.
-					Indeed, LSTM works with vectors only, which constrain us to shrink the images (or feature maps) into vectors, wether by flattening or applying spatial pooling.
-					However these operations result in a loss of information, sometimes to the detriment of useful information.
+					As mentioned in \ref{literature}, ConvLSTM were designed to counter the inability of LSTM to work with images.
+					Indeed, LSTM works with vectors only, which constrain us to shrink the images (or feature maps) into vectors, wether by flattening or applying spatial pooling or feature extraction.
+					However, these operations result in a loss of information, sometimes to the detriment of useful information.
 					ConvLSTM is a good alternative that comes with all the potential of a CNN fused with the recurrence ability of LSTM.
 					However, one must consider that by using images, we drastically augment the number of parameters needed in the ConvLSTM.
-					As an example if we consider a sequence of $N*256*256$ RGB images going through MobileNetV2, we recover a sequence of $N*8*8$ feature maps with $1280$ channels each one.
+					As an example if we consider a sequence of $N*256*256$ RGB images going through MobileNetV2, we recover a sequence of $8*8$ feature maps with $1280$ channels each one.
 					To send this through a LSTM, one must beforehand apply a spatial pooling to shrink those feature maps into $1*1$.
 					This sequence of vectors ($N*1*1*1280 \Leftrightarrow N*1280$) is then fed to a LSTM which output a feature vector with, let's say, 50 features.
 					This LSTM will then have ~266K parameters.
-					If we do the same with a ConvLSTM, meaning we don't have to apply spatial average beforehand, that takes the $N*8*8*1280$ feature maps and use 50 kernels of size $4*4$ with a stride of 4 (as an example), it will result in an output of size $2*2*50$, thus requiring to apply spatial pooling before any fully connected layer; however applying spatial pooling on a $2*2$ result in less loss information than on $8*8$.
+					If we do the same with a ConvLSTM, meaning we don't have to apply spatial average beforehand, that takes the $N*8*8*1280$ feature maps and use 50 kernels of size $4*4$ with a stride of 4 (as an example), it will result in an output of size $2*2*50$, thus requiring to apply spatial pooling before any fully connected layer; however applying spatial pooling on a $2*2$ result in less information loss than on $8*8$.
 					This ConvLSTM will unfortunately have ~4.2M parameters, which is more than 15 times bigger than the LSTM, while both result in a feature vector of dimension 50.
 					\begin{figure}[h!]
 						\centering
@@ -353,26 +353,26 @@
 						\label{comparison}
 					\end{figure}
 					\par
-					To compare, we provide a graphical illustration, Figure \ref{comparison}, of different values such as:
+					To compare them, we provide a graphical illustration, Figure \ref{comparison}, of different values such as:
 					\begin{itemize}
 						\item {\itshape time}: the time required to infer on one sample (milliseconds)
 						\item {\itshape sequence length}
 						\item {\itshape size}: number of parameters (rounded to the million)
 					\end{itemize}
-					The computations were done on GoogleColab using an NVIDIA Tesla K80.
-					The Figure \ref{comparison_50} represent the computation time as function of the sequence length, sequences of $8*8*1280$ images (or feature maps), where the output dimension is 50.
+					The computations were done on Google Colab using an NVIDIA Tesla K80.
+					The Figure \ref{comparison_50} represent the computation time as a function of the sequence length, sequences of $8*8*1280$ images (or feature maps), where the output dimension is 50.
 					Figures \ref{comparison_100}, \ref{comparison_200} and \ref{comparison_300} are similar but with an output dimension of 100, 200, and 300 respectively.
 					We can see that the advantage of the ConvLSTM over LSTM is rapidly taken over by the computation time and number of parameters to train.
 					In our studies, we used a ConvLSTM layer with 8 kernels of size $4*4$.
-					We also chosen a stride of 4, to avoid losing too much during the spatial pooling afterwards.
+					We also chosen to use a stride of 4, to avoid losing too much during the spatial pooling afterwards.
 					\par
-					Except for the convolutions, the internal structure is the same as LSTM (see appendix \ref{appendix_b}).
+					Except for the convolutions, the internal structure of ConvLSTM is the same as LSTM (see appendix \ref{appendix_b}).
 				\subsubsection{ConvNet1D}
 					Before using these RNN architectures to manipulate time-series data, a different approach was to use 1D convolutions, also called {\itshape temporal convolutions}.
-					It consists of taking a sequence of feature vectors and applying 1D convolution(s).
-					The kernel size of the convolution define the perception window of the convolution over time, i.e. how many seconds (or milliseconds) of the action the convolution is looking at.
+					It consists of taking a sequence of feature vectors and applying 1D convolutions.
+					The kernel size of the convolution define the time window perceived by the convolution, i.e. how many seconds (or milliseconds) of the action the convolution is looking at.
 					The advantage of temporal convolutions is the possibility to decompose the temporal processing in many depth levels.
-					Rather than taking the kernel size being equal to the sequence length, which enforce it to extract the temporal correlations in one step, we can decompose the extraction in many depth levels as is illustrated in Figure \ref{temp_conv}.
+					Rather than taking the kernel size being equal to the sequence length, which enforce it to extract the temporal correlations in one step, we can decompose the extraction in many depth levels as illustrated in Figure \ref{temp_conv}.
 					On the left we have a 1 level deep temporal convolution which have to extract the temporal correlations in one convolution, whereas on the right we increase the depthness to construct a hierarchical extraction of the temporal correlations.
 					Notice that the circles are actually vectors here.
 					\begin{figure}[h!]
@@ -381,8 +381,8 @@
 						\caption{Temporal convolutions of different depth.}\label{temp_conv}
 					\end{figure}
 					\par
-					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling, and feed the resulting feature vectors to a CNN od 1D convolutions.
-					In our studies, this {\itshape ConvNet1D} consists of a following of $3*3$ 1D convolutions with batch normalization and LeakyReLU activations.
+					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling, and feed the resulting feature vectors to a CNN of 1D convolutions.
+					In our studies, this {\itshape ConvNet1D} consists of stacked $3*3$ 1D convolutions with batch normalization and LeakyReLU activation.
 		\section{Results and interpretation}
 			Lorem ipsum.
 		\section{Tools}
@@ -432,7 +432,8 @@
 			\centering
 			\subfloat[vanilla RNN cell.]{\includegraphics[width=0.55\textwidth]{description-block-rnn-ltr.png}\label{rnn_cell}}
 			\hfill
-			\subfloat[LSTM cell.]{\includegraphics[width=0.4\textwidth]{lstm-ltr.png}\label{lstm_cell}}
+			\subfloat[LSTM cell.]{\includegraphics[width=0.4\textwidth]{lstm-ltr.png}\label{lstm_cell}} \\
+			{\tiny \url{https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks}}
 			\caption{Recurrent cells description.}
 		\end{figure}
 		\par
