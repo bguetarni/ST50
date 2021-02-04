@@ -40,7 +40,7 @@
 \setutbmcompanywebsite{heig-vd.ch}
 \setutbmcompanytutor{PEREZ-URIBE Andres}
 \setutbmschooltutor{GABER Jaafar}
-\setutbmkeywords{Fonction publique - Recherche - Algorithmes - Logiciel d'analyse de données - Deep Learning - Vision par ordinateur - Reconnaissance d'action - Vision égocentrique}
+\setutbmkeywords{Informatiques - Recherche - Algorithmes - Logiciel d'analyse de données - Deep Learning - Vision par ordinateur - Reconnaissance d'action - Vision égocentrique}
 \setutbmabstract{
 	Le deep learning a été largement utilisé dans la vision par ordinateur durant les précédentes décennies.
 	Plusieurs problèmes ont étés adressés notamment la détéction d'objets, la génération de contenu, la segmentation d'image ou d'instance et une poignée d'autres.
@@ -392,6 +392,7 @@
 					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling to shrink them to vectors, and feed the resulting feature vectors to a CNN of 1D convolutions.
 					In our studies, this {\itshape ConvNet1D} consists of stacked 1D convolutions (using kernels of size 3) with batch normalization and LeakyReLU activation.
 		\section{Results and interpretation}
+			In a first attempt, we used EPIC-KITCHENS-55 to reduce the training time in order to explore the different possibilities in terms of: architecture, hyperparameters and data processing.
 			All the models were trained using the Adam optimizer with an initial learning rate of 0.001 and a learning rate decay of 0.2 starting from epochs 35, every 20 epochs.
 			We used different batchs sizes, depending on how much GPU were used and how much data were used.
 			We also added a dropout of 0.5 before the two fully-connected layer to reduce overfitting.
