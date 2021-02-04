@@ -40,15 +40,16 @@
 \setutbmcompanywebsite{heig-vd.ch}
 \setutbmcompanytutor{PEREZ-URIBE Andres}
 \setutbmschooltutor{GABER Jaafar}
-\setutbmkeywords{Fonction publique - Recherche - Algorithmes - Logiciel d'analyse de données - Deep Learning - Computer Vision - Action recognition - Egocentric vision}
+\setutbmkeywords{Fonction publique - Recherche - Algorithmes - Logiciel d'analyse de données - Deep Learning - Vision par ordinateur - Reconnaissance d'action - Vision égocentrique}
 \setutbmabstract{
-	Deep learning has been widely used in computer vision in the last two decades.
-	Several tasks have been addressed with, including object detection, content generation, image or instance segmentation and a couple of others.
-	Nowadays very complex tasks are at the heart of academic research, including action/activity recognition; these two last are really similar, the difference is slight so here we will use the term of action recognition (the difference can be for example the action of picking a fork during the activity of cooking).
-	Particularly, achieving action recognition at a reasonable accuracy could allow the follow-up of people with reduced physical capacities especially with tremors in their daily life.
-	It will be then easy to identify the actions that a person struggle with, and then conduct a targeted rehabilitation process.
-	In this internship we explored how deep learning can be applied in action recognition and what the actual state-of-the-art is.
-	We focused on cheap computation solutions as it is expected to be used on edge devices; e.g. mobile phone, embedded device\dots
+	Le deep learning a été largement utilisé dans la vision par ordinateur durant les précédentes décennies.
+	Plusieurs problèmes ont étés adressés notamment la détéction d'objets, la génération de contenu, la segmentation d'image ou d'instance et une poignée d'autres.
+	De nos jours, des tâches très complexes sont au coeur de la recherche académique, incluant la reconnaissance d'action ou d'activité; la différence entre ces deux tâches est très fine et nous nous concentrons ici sur la reconnaissance d'action (la différence peut être vue comme par example l'action 'prendre une fourchette' et l'activité 'cuisiner').
+	\par
+	Atteindre des résultats resonnables dans la reconnaissance d'action pourrait permettre de développer des systèmes de suivi de patient atteint de troubles physiques, comme des tremblements, dans leur vie de tous les jours.
+	Il serait ainsi plus facile d'identifier les actions dont une personne éprouve du mal à effectuer, et ainsi conduire un processus de réhabilitation ciblée.
+	Dans ce projet nous explorons comment le deep learning peut-être appliqué à la reconnaissance d'action et quel en est l'état de l'art actuel.
+	Nous nous sommes concentré sur des solutions peu coûteuses en calcul puisque nous nous attendions à les implémenter sur des systèmes embarqués, e.g. téléphone mobile, NVIDIA Jetson Nano\dots
 }
 
 \makeglossaries
@@ -102,7 +103,7 @@
 			\par
 			\bigbreak
 			We will first describe the relationship between deep learning and computer vision to understand which important part the first has became to the latter.
-			Then, we'll review the state-of-the-art of egocentric action recognition in the literature to describe afterwards which methods were studied.
+			Then, we'll review the egocentric action recognition state-of-the-art in the literature to describe afterwards which methods were studied.
 			In a critical process, we then critic the obtained results along with an interpretation.
 			Finally, we'll conclude with some observations and difficulties encountered and open some roads for future investigation.
 			\par
@@ -145,7 +146,7 @@
 					\par
 					Another interesting potential of action recognition systems is video audio description, this could make all TV programs or videos accessible in audio description for blind or visually impaired people.
 		\section{State-of-the-art}
-			In this chapter we introduce the state-of-the-art of the egocentric action recognition literature.
+			In this chapter we introduce the egocentric action recognition state-of-the-art.
 			We'll describe a particular architecture that a majority of papers have focused on; for a specific reason.
 			Furthermore, we'll see how different approaches, currently under investigation, taken from \gls{nlp} have achieved considerable performance.
 			\subsection{Two-stream architectures}\label{twostream}
@@ -314,7 +315,7 @@
 					\subfloat{\includegraphics[width=1.2\textwidth]{architecture_diagr.png}\label{common_base}}
 					\caption{Common base.}
 				\end{figure}
-				We use the cross-entropy error between predicted and ground-truth labels as error function and the Adam optimizer.
+				We use the cross-entropy error between predicted and ground-truth labels as error function.
 				\begin{align*}
 					L_{verb} = -\sum_{i} y^{verb}_{i}log(\hat{y}^{verb}_{i}) \\
 					L_{noun} = -\sum_{i} y^{noun}_{i}log(\hat{y}^{noun}_{i}) \\
@@ -328,6 +329,14 @@
 					They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}; a brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
 					Despite their success, LSTM are also known to encounter chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent}, which make them difficult to train with little data.
 					Albeit these difficulties, we still tried to use LSTM because of its popularity.
+					Nonetheless, we must ensure that what is fed to the LSTM is a sequence of vectors and not images.
+					We thus used {\itshape global average pooling} on the output of MobileNetV2 to shrink them to vectors.
+					Global average pooling is illustrated in Figure \ref{gap}, where $k$ is the mean filter with the same size as $A$.
+					\begin{figure}[h!]
+						\centering
+						\subfloat{\includegraphics[width=0.9\textwidth]{gap.png}\label{gap}}
+						\caption{Global average pooling.}
+					\end{figure}
 				\subsubsection{ConvLSTM}
 					As mentioned in \ref{literature}, ConvLSTM were designed to counter the inability of LSTM to work with images.
 					Indeed, LSTM works with vectors only, which constrain us to shrink the images (or feature maps) into vectors, wether by flattening or applying spatial pooling or feature extraction.
@@ -373,18 +382,19 @@
 					The kernel size of the convolution define the time window perceived by the convolution, i.e. how many seconds (or milliseconds) of the action the convolution is looking at.
 					The advantage of temporal convolutions is the possibility to decompose the temporal processing in many depth levels.
 					Rather than taking the kernel size being equal to the sequence length, which enforce it to extract the temporal correlations in one step, we can decompose the extraction in many depth levels as illustrated in Figure \ref{temp_conv}.
-					On the left we have a 1 level deep temporal convolution which have to extract the temporal correlations in one convolution, whereas on the right we increase the depthness to construct a hierarchical extraction of the temporal correlations.
-					Notice that the circles are actually vectors here.
+					On the left we have a 1 level deep temporal convolution which have to extract the temporal correlations in one convolution, whereas on the right we increase the depthness to construct a hierarchical extraction of the temporal correlations; notice that the circles are actually vectors here.
 					\begin{figure}[h!]
 						\centering
 						\includegraphics[width=0.8\textwidth]{temporal_convolution.png}
 						\caption{Temporal convolutions of different depth.}\label{temp_conv}
 					\end{figure}
 					\par
-					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling, and feed the resulting feature vectors to a CNN of 1D convolutions.
-					In our studies, this {\itshape ConvNet1D} consists of stacked $3*3$ 1D convolutions with batch normalization and LeakyReLU activation.
+					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling to shrink them to vectors, and feed the resulting feature vectors to a CNN of 1D convolutions.
+					In our studies, this {\itshape ConvNet1D} consists of stacked 1D convolutions (using kernels of size 3) with batch normalization and LeakyReLU activation.
 		\section{Results and interpretation}
-			Lorem ipsum.
+			All the models were trained using the Adam optimizer with an initial learning rate of 0.001 and a learning rate decay of 0.2 starting from epochs 35, every 20 epochs.
+			We used different batchs sizes, depending on how much GPU were used and how much data were used.
+			We also added a dropout of 0.5 before the two fully-connected layer to reduce overfitting.
 		\section{Tools}
 			Lorem ipsum.
 			% Librairies
