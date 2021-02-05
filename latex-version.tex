@@ -322,7 +322,7 @@
 					Loss = L_{verb} + L_{noun} \\
 				\end{align*}
 				where $y$ and $\hat{y}$ are the ground-truth and model prediction respectively.
-			\subsection{Temporal process subsystem}\label{lstm}
+			\subsection{Temporal process subsystem}
 				\subsubsection{LSTM}\label{lstm}
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
 					Their ability to propagate information during the inference is particularly appreciated as well as their independence of the sequence length, indeed the weights are shared across the sequence elements (which required the introduction of the {\itshape backpropagation through time} algorithm).
@@ -397,15 +397,31 @@
 			We used different batchs sizes, depending on how much GPU were used and how much data were used.
 			We also added a dropout of 0.5 before the two fully-connected layer to reduce overfitting.
 		\section{Tools}
-			Lorem ipsum.
-			% Librairies
-			% Multi-GPU (2x1080 Ti)
+			It's almost frightening the ease with which one can implement deep learning algorithms.
+			Back in the 90's, researchers would take several weeks to develop a simple ConvNet, and even more to train it.
+			Today, with the python librairies, GPUs and storage devices that we have access to, such ConvNet can be written and train in hours only.
+			The tools that we have in our disposition make deep learning looks like a children game, and may be dangerous if we use is without knowing what is under the hood.
+			For this project we used the Keras API, that is built on Tensorflow (2.4), to develop, train and test our models, coupled with two NVIDIA GTX 1080Ti.
+			We used distributed training to speed up the training because of the large size of one sample (i.e. a $N*256*256*3$, where $N$ can be up to 20).
+			Indeed, this large size prevented us from loading all the dataset in memory and train the models in one stage, we were therefore forced to resort to a workaround described in section \ref{difficulties}.
+		\section{Difficulties and problems}\label{difficulties}
+			The major difficulty of this project was the memory management, for two reasons:
+			\begin{itemize}
+				\item Let's consider the size of one sample where the sequence length is fixed to 20: $20*256*256*3 = 3932160$. Each sample is a vector of almost 4 millions float32 values, which makes a total of 15Mo footprint for one such sample; a float32 value is encoded in 4 bytes.
+				Considering that we had 250Go of RAM, it means that we can fit only 17K samples at a time, meanwhile our train set contained 67K samples.
+				\item While a model was training using theoretically 30\% of the RAM, because we divided the dataset in this way, we realized that it was actually using more than 60\%.
+				After some investigations we found that keras was storing a duplicate of the data in the backend resulting in a surplus of memory usage, with even memory leak at some point.
+			\end{itemize}
+			These two reasons forced us to take memory management under serious consideration.
+			We decided to divide the training procedure by training the models on groups of data.
+			We divide our training/validation data in groups such that each group size is equal to a certain percentage of the RAM.
+			We load the first group and train the model for a certain number of epochs and we record some validation metrics.
+			We then do the same thing for each other groups until all the model get through all of them.
+			At this point we go back to the frist group and iterate until all groups have been used $n$ times; where $n$ is the number of epochs.
 	\chapter{Conclusion}
 		\section{Results synthesis}
 			Lorem ipsum.
 		\section{Observations}
-			Lorem ipsum.
-		\section{Difficulties and problems}
 			Lorem ipsum.
 		\section{Roads for investigation}
 			Lorem ipsum.
@@ -452,7 +468,7 @@
 		Its particularity is that it implements not one but two states called {\itshape hidden} ($a_{t}$) and {\itshape cell} ($c_{t}$) states.
 		The purpose of the cell state in LSTM is to allow for long-term dependencies, inducing a long-term memory.
 		While their memory cell are more complex than RNN's, see Figure \ref{lstm_cell}, they exhibit most of the time better performance due to their ability to catch these long-term dependencies.
-		The flow of information through the cell state, top line of \ref{lstm_cell}, has been shown to help counter gradient vanishing.
+		The flow of information through the cell state, top line of Figure \ref{lstm_cell}, has been shown to help counter gradient vanishing.
 		\par
 		LSTM equations:
 		\begin{align*}
@@ -486,6 +502,5 @@
 			\subfloat[$m$]{\includegraphics[width=0.3\textwidth]{opticalflow/uv.png}}
 			\caption{Optical flow field example.}\label{optical_flow}
 		\end{figure}
-
 	\makeutbmbackcover{}
 \end{document}
