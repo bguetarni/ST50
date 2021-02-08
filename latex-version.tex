@@ -17,6 +17,7 @@
 \usepackage{xurl}
 \usepackage{enumitem}
 
+
 \titleformat{\chapter}[block]{\normalfont\huge\bfseries}{\thechapter.}{5pt}{\Huge}
 \titlespacing{\chapter}{0pt}{0pt}{40pt}
 % \setcounter{tocdepth}{0} % Show chapters only
@@ -67,10 +68,13 @@
 \begin{document}
 	\makeutbmfrontcover{}
 
-	% write table of content
+	% table of content
 	\tableofcontents{}
 	
-	% write glossary
+	% write list of figures
+	\listoffigures
+	
+	% glossary
 	\printglossary
 	
 	% set paragraph indent length
@@ -242,8 +246,8 @@
 				Therefore, people searched for a way to reduce this training time and eventually recycle the learned knowledge, by transferring them from a domain to another, which later became Transfer Learning.
 				\begin{figure}[h!]
 					\centering
-					\subfloat{\includegraphics[width=0.9\textwidth]{transfer_learning.png}}
-					\caption{Transfer Learning.}
+					\includegraphics[width=0.9\textwidth]{transfer_learning.png}
+					\caption{Transfer Learning.}\label{transfer_learning}
 				\end{figure}
 				The main argument of this practice is that big ConvNets layers, when trained on big dataset, will learn different features depending on their position in the architecture.
 				Early layers tend to learn basic features such as: edge and corner detectors, Gabor filters, etc.
@@ -284,8 +288,8 @@
 				We provide in appendix \ref{appendix_a}, examples of both datasets to see how different they are.
 				Even if basic features are shared (edges, corners...), we thought that the high-level features to extract are not transferable from ImageNet to EPIC-KITCHENS.
 				\par
-				This idea was used until the final models, because we thought that removing all these blocks actually destroy the learned hierarchical feature extraction.
-				We then decided to use all the architecture except for the fully-connected layers that we replaced with our own.
+				This idea was used until the final models, because we found that removing all these blocks actually destroy the learned hierarchical feature extraction.
+				We then decided to use all the architecture except for the fully-connected layers that we replaced with our own (Figure \ref{transfer_learning}).
 				\par
 				\textbf{MobileNetV2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge device utilization.
 				Modern deep networks have millions of parameters, and they are trained with modern technologies like GPU and TPU.
@@ -542,16 +546,32 @@
 	\appendix
 	\chapter{ImageNet and EPIC-KITCHENS comparisons}\label{appendix_a}
 		\begin{figure}[h!]
-			\centering
-			\subfloat[EPIC-KITCHENS]{
-				\includegraphics[width=0.3\textwidth]{epickitchens1.jpg},
-				\includegraphics[width=0.3\textwidth]{epickitchens2.jpg},
-				\includegraphics[width=0.3\textwidth]{epickitchens3.jpg}}
+			\subfloat{
+				\includegraphics[width=0.3\textwidth]{epickitchens1.jpg}
+				\includegraphics[width=0.3\textwidth]{epickitchens3.jpg}
+				\includegraphics[width=0.3\textwidth]{epickitchens4.jpg}
+			}
 			\hfill
-			\subfloat[ImageNet]{
-				\includegraphics[width=0.3\textwidth]{imagenet1.jpeg},
-				\includegraphics[width=0.3\textwidth]{imagenet2.jpeg},
-				\includegraphics[width=0.3\textwidth]{imagenet3.jpeg}}
+			\subfloat{
+				\includegraphics[width=0.3\textwidth]{epickitchens5.jpg}
+				\includegraphics[width=0.3\textwidth]{epickitchens6.jpg}
+				\includegraphics[width=0.3\textwidth]{epickitchens7.jpg}
+			}
+			\caption{EPIC-KITCHENS}
+		\end{figure}
+		\begin{figure}[h!]
+			\subfloat{
+				\includegraphics[width=0.3\textwidth]{imagenet1.jpeg}
+				\includegraphics[width=0.3\textwidth]{imagenet2.jpeg}
+				\includegraphics[width=0.3\textwidth]{imagenet5.jpeg}
+			}
+			\hfill
+			\subfloat{
+				\includegraphics[width=0.3\textwidth]{imagenet6.jpeg}
+				\includegraphics[width=0.3\textwidth]{imagenet7.jpeg}
+				\includegraphics[width=0.3\textwidth]{imagenet8.jpeg}
+			}
+			\caption{ImageNet}
 		\end{figure}
 	\chapter{Reccurent Neural Networks / Long-Short Term Memory}\label{appendix_b}
 		Processing time-sequence data with deep architectures has been challenging due to the necessity of incorporating a memory mechanism.
@@ -561,7 +581,7 @@
 			\centering
 			\includegraphics[width=1.\textwidth]{architecture-rnn-ltr.png}
 			{\tiny \url{https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks}}
-			\caption{vanilla RNN architecture.}
+			\caption{Vanilla RNN architecture.}
 			\label{rnn}
 		\end{figure}
 		A RNN cell, depicted in Figure \ref{rnn_cell}, uses {\itshape gates} to encode, update and reset information; the learnable weights are ({\itshape $W_{aa},W_{ax},W_{ya},b_{a},b_{y}$}).
