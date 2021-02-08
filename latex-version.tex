@@ -594,7 +594,7 @@
 			\caption{Recurrent cells description.}
 		\end{figure}
 		\par
-		A successful implementation of RNN is called Long Short-Term memory \cite{Hochreiter1997lstm}.
+		A successful implementation of RNN is called Long Short-Term Memory \cite{Hochreiter1997lstm}.
 		Its particularity is that it implements not one but two states called {\itshape hidden} ($a_{t}$) and {\itshape cell} ($c_{t}$) states.
 		The purpose of the cell state in LSTM is to allow for long-term dependencies, inducing a long-term memory.
 		While their memory cell are more complex than RNN's, see Figure \ref{lstm_cell}, they exhibit most of the time better performance due to their ability to catch these long-term dependencies.
@@ -610,7 +610,7 @@
 			& c_{t} = \Gamma_{f} \circ c_{t-1} + \Gamma_{u} \circ \tilde{c}_{t} \\
 			& a_{t} = \Gamma_{o} \circ tanh(c_{t})
 		\end{align*}
-		where $\sigma$ is the sigmoid activation function, $tanh$ the hyperbolic tangent function, $\circ$ denotes the Hadamard or element-wise product and the learnable weights (and biases) are $W$, $U$ and $b$.
+		where $\sigma$ is the sigmoid activation function, $tanh$ the hyperbolic tangent function, $\circ$ denotes the Hadamard or element-wise product and the learnable weights (and biases) are $W$, $U$ (and $b$).
 		($\Gamma_{f}$, $\Gamma_{u}$, $\Gamma_{r}$, $\Gamma_{o}$) are the LSTM gates and their purpose is to forget, update, reset and reveal the information respectively.
 		At the first step, $c_{0}$ and $a_{0}$ are set to 0.
 	\chapter{Optical Flow fields}\label{appendix_c}
