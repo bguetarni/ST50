@@ -108,7 +108,7 @@
 			We will first describe the relationship between deep learning and computer vision to understand which important part the first has became to the latter.
 			Then, we'll review the egocentric action recognition state-of-the-art in the literature to describe afterwards which methods were studied.
 			In a critical process, we then critic the obtained results along with an interpretation.
-			Finally, we'll conclude with some observations and difficulties encountered and open some roads for future investigation.
+			Finally, we'll conclude with some personal observations and difficulties encountered and open some roads for future investigation.
 			\par
 			\bigbreak
 			The code is available at: \url{https://github.com/bguetarni/Egocentric-activity-recognition}.
@@ -277,6 +277,8 @@
 				We provide in appendix \ref{appendix_a}, examples of both datasets to see how different they are.
 				Even if basic features are shared (edges, corners...), we thought that the high-level features to extract are not transferable from ImageNet to EPIC-KITCHENS.
 				\par
+				This idea was used until the final models, because we thought that removing all these blocks actually destroy the learned hierarchical feature extraction.
+				We then decided to use all the architecture except for the fully-connected layers that we replaced with our own.
 				\textbf{MobileNetV2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge device utilization.
 				Modern deep networks have millions of parameters, and they are trained with modern technologies like GPU and TPU.
 				However, embedding such networks in devices with limited computation power implies to minimize the computations, especially for real-time solutions.
@@ -287,7 +289,6 @@
 				The final convolution, after the last block, outputs 1280 features.
 				From the beginning of the project, we intended to, if a model was successful enough, use it in an edge device with real-time predictions.
 				Thus, we designed our architectures using MobileNetV2 pre-trained on ImageNet as a feature extractor.
-				%TODO: finally we use all MobileNet
 			%\subsection{Attention}
 			%	\say{Attention mechanism was proposed for focusing attention on features that are relevant for the task to be recognized} \cite{sudhakaran2019lsta}.
 			%	We, humans, have the capacity to focus our {\itshape attention} into a small zone of our field of view.
@@ -516,15 +517,14 @@
 				Nonetheless, we had recourse to distributed training when a good set of hyperparameters was found, as well as for the last convNet1D model.
 				It is worth noting that the last model trained on EPIC-KITCHENS-100 took more than six days for 100 epochs, even with two GPUs and 165Gb of RAM.
 	\chapter{Conclusion}
-		\section{Results synthesis}
+		\section{Results synthesis} %TODO
 			Lorem ipsum.
-			%TODO
-		\section{Roads for investigation}
+		\section{Roads for investigation} %TODO
 			Lorem ipsum.
-			%TODO
-		\section{Acquired knowledge and skills}
+		\section{Acquired knowledge and skills} %TODO
 			Through this project I had the opportunity to work on a topic that is currently on the deep learning and computer vision research front scene.
-			This project shown me the difficulty to deal with deep architectures, especially debugging such black boxes.
+			This project shown me the difficulty to work with deep architectures, especially debugging such huge black boxes.
+			After all the literature reviewing on the subject, I learned many things about recent developed techniques and architectures.
 	\bibliographystyle{apalike}
 	\bibliography{bibliography}
 	\appendix
