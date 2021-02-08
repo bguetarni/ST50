@@ -34,7 +34,7 @@
 %----------------------------------------
 \setutbmfrontillustration{report_cover}
 \setutbmtitle{Deep Learning for egocentric vision}
-\setutbmsubtitle{ST50 thesis - P2020}
+\setutbmsubtitle{Rapport de stage ST50 - A2020}
 \setutbmstudent{GUETARNI Bilel}
 \setutbmstudentdepartment{Computer Science department}
 \setutbmstudentpathway{Image, Interaction et Réalité Virtuelle}
@@ -59,9 +59,10 @@
 \newglossaryentry{ego} {name=egocentric view, description={First person view}}
 \newglossaryentry{jointly} {name=jointly trained, description={Training several deep learning systems as one unique system}}
 \newglossaryentry{nlp} {name=Natural Language Processing, description={Automatic process of language by computers}}
-\newglossaryentry{saliency} {name=saliency, description={The property of an object to “stand-out” with respect to its surroundings}}
+% \newglossaryentry{saliency} {name=saliency, description={The property of an object to “stand-out” with respect to its surroundings}}
 \newglossaryentry{synthdata} {name=synthetic-to-real domain gap, description={The unreal property of synthetic data that impacts models accuracy when trained on}}
 \newglossaryentry{vanish} {name=vanishing gradient, description={Trend of the gradient to vanish during backpropagation in deep architectures}}
+\newglossaryentry{salient} {name=salient, description={an item that stands out from its neighbors}}
 
 \begin{document}
 	\makeutbmfrontcover{}
@@ -136,9 +137,9 @@
 				Nonetheless, large scaled recently published datasets have exposed the egocentric view problematic and encouraged research for.
 				\begin{figure}[h!]
 					\centering
-					\subfloat[First person.]{\includegraphics[width=0.4\textwidth]{firstperson.jpeg}\label{firstperson}}
+					\subfloat[first person.]{\includegraphics[width=0.4\textwidth]{firstperson.jpeg}\label{firstperson}}
 					\hfill
-					\subfloat[Third person.]{\includegraphics[width=0.4\textwidth]{thirdperson.jpg}\label{thirdperson}}
+					\subfloat[third person.]{\includegraphics[width=0.4\textwidth]{thirdperson.jpg}\label{thirdperson}}
 					\caption{Action views.}
 				\end{figure}
 				A similar task that is increasingly covered is image captioning \cite{xu2015show}, where a system try to add a caption to an image; which is related to scene understanding.
@@ -161,7 +162,7 @@
 					This problematic of describing motion has been extremely present in the computer vision literature and it gave rise to optical flows, sometimes also called optical flow fields.
 					An optical flow is, most of the time, computed as a shift between two gray images.
 					Two types of optical flows exist: {\itshape sparse} and {\itshape dense}.
-					Sparse optical flows track distinct pixels among the images using feature selectors (e.g. Harris corner detector) and computes their displacement.
+					Sparse optical flows track distinct pixels among the images using feature selectors (e.g. Harris corner detector) and compute their displacement.
 					On the other hand, dense optical flows are a per-pixel-motion estimate method.
 					Here, we'll consider the latter one; see Appendix \ref{appendix_c} for some examples.
 					There are several methods to compute dense optical flows, but the most known (and used) are the TV-L1 \cite{perez2013tv} and the Gunner Farnebäck \cite{farneback2003two} algorithms.
@@ -171,8 +172,10 @@
 					In \cite{wang2016temporal}, two Convolutional Neural Networks (CNN or ConvNet, they'll be used interchangeably but describe the same thing) are \gls{jointly}; rigorously speaking, one stream is trained before and used to initialize the other one before being jointly trained.
 					The two-stream are identical except for the number of features expected for the input.
 					The first one expect RGB images, which makes 3 features, while the second one expect stacked optical flows (2 or more features).
-					Random RGB images and optical flows are drawn from the action video and fed to their corresponding CNN.
+					They divide the video in snippets and each of these are being associated to one RGB image and an optical flow that describe the snippet.
+					These pairs of RGB images and optical flow are fed to a ConvNet that output class scores for each pair.
 					At then end, a consensus function combines all the outputs to infer the final prediction.
+					The ConvNet consist of two separate ConvNets: a spatial (RGB) and temporal (optical flow).
 					Notice that as the RGB images are processed individually, the motion can hardly be encoded by the RGB stream, in opposite with the optical flow stream.
 					They also show that using RGB differences rather than stacked RGB images improves the performance.
 					\par
@@ -180,37 +183,37 @@
 					Even if we use optical flows, they describe an infinitesimal motion compared to the whole action motion.
 					In \cite{ye2019two}, this idea of using the temporal correlation of the images makes use of Recurrent Neural Networks (RNN) through a ConvLSTM \cite{shi2015convolutional}.
 					As originally developed, the Long Short-Term Memory (LSTM), that is discussed in \ref{lstm}, takes as input a sequence of vector and output a single vector.
-					However, as we consider images it would be a waste to shrink the images into vectors for feeding them to a LSTM; because it would result in a loss of information.
+					However, as we consider images it would be a waste to shrink them into vectors for a LSTM; because it would result in a loss of information.
 					To overcome this lost of information when using LSTM, \cite{shi2015convolutional} developed the ConvLSTM cell, that allows to process images inside a LSTM.
 					For this end, they replace the matrix product by a convolution.
-					This simple yet effective trick create a sort of Convolutional Recurrent Neural Network.
+					This simple yet effective trick create somewhat a Convolutional Recurrent Neural Network.
 					\par
 					Later on, \cite{ye2019two} used a ResNet-101 pre-trained on ImageNet as feature extractor.
 					As the others, this ConvNet is duplicated to use RGB frames and optical flows.
 					The resulting feature maps of the two modes are then fused using different strategies.
-					A ConvLSTM processes the sequence of fused feature maps before a final fully-connected layer.
+					A ConvLSTM processes the sequence of fused feature maps before a fully-connected layer.
 					\par
 					Last but not least, Sudhakaran et al. \cite{sudhakaran2019lsta} pointed a major difficulty to action recognition in egocentric vision that is the \say{huge variations present in the data caused by the highly articulated nature of the human body}.
 					Along with this difficulty, they make the following assumption (that surely makes sense): \say{the discriminative information is often confined locally in the video frame [...] thus, not all convolutional features are equally important for recognition}.
 					From these, they derive an architecture that uses a widely studied mechanism nowadays, attention.
-					Simply put, they add a learnable mapping to weight the input feature maps before feeding them to the cell.
+					Simply put, they add a learnable mapping to weight the input feature maps before feeding them to the cell; the purpose of this mapping is to make relevant features more \gls{salient}.
 					Additionally, the output gate uses a weighted version of the cell state rather than the sequence element.
-					They incorporate this mechanism with a ConvLSTM and achieve the best results to this date.
+					They coupled this mechanism with a ConvLSTM.
 			\subsection{EPIC-KITCHENS}
 				What would be deep learning without data ?
 				\par
-				From the very beginning, people have been struggling to push deep architectures into configurations with acceptable accuracy.
+				From the very beginning, people have been struggling to push deep architectures into configurations with better accuracy.
 				Researchers claim that the more data is gathered for training, the likeliest the model will converge.
 				However, certain problems require labels that are either complex or long to get.
 				For example, image segmentation requires that every pixels of an object is labeled within its category, and this, for all objects in every images.
 				On the other hand, action recognition requires to associate an action for every frame of video; we can still get around this by associating labels to a timelapse which contains an action.
 				This reflects the difficulty to produce accurate and large scaled datasets for supervised learning tasks.
 				\par
-				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchen actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
+				For egocentric action recognition, a team of researchers has published a large scaled dataset of kitchen actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
 				This dataset has been first published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS-55).
 				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS-100) splitted into train (75\%), validation (10\%) and test (15\%) sets.
 				Not only it contains action recognition labels, but also action detection, action anticipation and several others challenges.
-				To this date, it's the biggest open egocentric action recognition dataset available.
+				To this date, it's the biggest open egocentric action recognition dataset available (however using a big dataset implies a finest management of the memory; see \ref{memory}).
 				\par
 				Each action is delimited by its frames and timesteps in the video, and is labeled with a {\itshape verb} and a {\itshape noun} (see Figure \ref{close_refrigerator}).
 				\begin{figure}[h!]
@@ -218,11 +221,9 @@
 					\subfloat{\includegraphics[width=0.55\textwidth]{close_refrigerator.jpg}\label{close_refrigerator}}
 					\caption{Close ({\small verb}) the refrigerator ({\small noun}).}
 				\end{figure}
-				The biggest advantage of using this dataset is its natural looking data.
-				The videos were recording by researchers, engineers, students and other people, in their kitchens while they were doing daily activities like: cooking, cleaning, etc.
+				A particularity of this dataset is its natural looking data as the videos were recording by researchers, engineers, students and other people, in their kitchens while they were doing daily activities like: cooking, cleaning, etc.
 				The resulting data have a very natural aspect which makes it suitable to train models with real world environments knowledge.
-				However using a big dataset implies a finest management of the memory (see \ref{memory}).
-				A major drawback that natural data contained is the biased proportion between labels.
+				A major drawback of natural data is the biased proportion between labels.
 				For any activity, all actions that we do are not uniformly distributed in time.
 				This is illustrated by the proportion of samples of each verb class in EPIC-KITCHENS-55 in Figure \ref{epic_55_imbalance}; the same problem occur for the noun classes.
 				\begin{figure}[h!]
@@ -233,16 +234,21 @@
 				\end{figure}
 				This class imbalance produces highly biased models toward the most represented classes in the data, as shown in \ref{results}, and is still present in the new version.
 				We looked for using {\itshape class weights}, that associate weights to each sample according to its class, but it didn't help and resulted in a lot of instability for the models.
+				\par
 				In our experiments we first used EPIC-KITCHENS-55 to reduce the time for hyperparameters search and a final model was trained on EPIC-KITCHENS-100 (\ref{results}).
 		\section{Studied methods}
 			\subsection{Transfer Learning}
 				As ConvNet architectures have become bigger and bigger over the past 20 years, the time and amount of computations to train these networks grew exponentially.
-				Therefore, people searched for a way to reduce this training time and eventually recycle the learned knowledge, by transferring them from a domain to another.
-				It's called Transfer Learning.
+				Therefore, people searched for a way to reduce this training time and eventually recycle the learned knowledge, by transferring them from a domain to another, which later became Transfer Learning.
+				\begin{figure}[h!]
+					\centering
+					\subfloat{\includegraphics[width=0.9\textwidth]{transfer_learning.png}}
+					\caption{Transfer Learning.}
+				\end{figure}
 				The main argument of this practice is that big ConvNets layers, when trained on big dataset, will learn different features depending on their position in the architecture.
-				Early layers tend to learn basic features such as: edge detectors, Gabor filters, etc.
+				Early layers tend to learn basic features such as: edge and corner detectors, Gabor filters, etc.
 				And the deeper we go in the architecture, the more complex these features become.
-				To proof this, we provide what is called a {\itshape feature visualization} of different kernels of MobileNetV2 in Figure \ref{feature_visualization}; the reason why MobileNetV2 is given later.
+				To proof this, we provide what is called a {\itshape feature visualization} of different kernels of MobileNetV2 in Figure \ref{feature_visualization}; the reason why we used MobileNetV2 is given later.
 				\subsubsection{Feature visualization}
 					\begin{figure}[h!]
 						\centering
@@ -280,6 +286,7 @@
 				\par
 				This idea was used until the final models, because we thought that removing all these blocks actually destroy the learned hierarchical feature extraction.
 				We then decided to use all the architecture except for the fully-connected layers that we replaced with our own.
+				\par
 				\textbf{MobileNetV2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge device utilization.
 				Modern deep networks have millions of parameters, and they are trained with modern technologies like GPU and TPU.
 				However, embedding such networks in devices with limited computation power implies to minimize the computations, especially for real-time solutions.
