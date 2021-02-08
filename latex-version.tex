@@ -404,7 +404,7 @@
 					\end{figure}
 					\par
 					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling to shrink them to vectors, and feed the resulting feature vectors to a CNN of 1D convolutions.
-					In our studies, this {\itshape ConvNet1D} consists of stacked 1D convolutions (using kernels of size 3) with batch normalization and LeakyReLU activation.
+					In our experiments this {\itshape ConvNet1D} consists of stacked 1D convolutions (using kernels of size 3) with batch normalization and LeakyReLU activation.
 		\section{Results and interpretation}\label{results}
 			The models were trained during 100 epochs, using the Adam optimizer with an initial learning rate of 0.001 and learning rate decay with a factor of 0.2 starting from epochs 35 and every 20 epochs.
 			In most cases the training was stopped before the end because of the performance not improving or overfitting (early stopping).
@@ -531,20 +531,20 @@
 			Furthermore, we shown that despite its popularity, the LSTM architecture can sometimes be surpassed by simpler architectures because of its complexity and big number of parameters.
 			We also shown that ConvLSTM provides an advantage over LSTM when working on images and hence derives better performance on a validation set, despites its bigger size.
 		\section*{Roads for investigation}
-			During this project, we spent a lot of time lookig for the good set of hyperparameters and use of Transfer Learning as well as exploring the dataset.
-			We think that a good next step woulb be to use the available optical flow fields of EPIC-KITCHENS videos (they are provided in the dataset) and to use them in an attention mechanism.
-			In the recent literature of computer vision deep learning, attention mechanisms are omnipresent and it has be shown that they enhance the performance for several recognition tasks.
+			During this project, we spent a lot of time looking for the good set of hyperparameters and use of Transfer Learning as well as exploring the dataset.
+			We think that a good next step would be to use the available optical flow fields of EPIC-KITCHENS videos (they are provided in the dataset) and to use them in an attention mechanism.
+			In the recent literature of deep learning for computer vision, attention mechanisms are omnipresent and it has be shown that they enhance the performance for several recognition tasks.
 			Indeed, in the last few weeks of the proejct we spent some time developing this idea but unfortunately we have been cut off by time.
 			Another good step would be to use a bigger backbone than MobileNetV2, to create deeper features, and use model pruning afterwards to reduce its size.
 		\section*{Acquired knowledge and skills}
 			Through this project I had the opportunity to work on a topic that is currently on the deep learning and computer vision research front scene.
 			This project shown me the difficulty to work with deep architectures, especially debugging such big black boxes.
 			After all the literature reviewing on the subject, I also expanded my knowledge about recent deep learning techniques as well as the different difficulties that a model can encounter in a training process.
-
+			I have gained competences in implementation of deep learning by manipulating several tools and learned how to take advantage of existing solutions by incorporating them in my solution.
 	\bibliographystyle{apalike}
 	\bibliography{bibliography}
 	\appendix
-	\chapter{ImageNet and EPIC-KITCHENS comparisons}\label{appendix_a}
+	\chapter{ImageNet and EPIC-KITCHENS}\label{appendix_a}
 		\begin{figure}[h!]
 			\subfloat{
 				\includegraphics[width=0.3\textwidth]{epickitchens1.jpg}
@@ -557,7 +557,7 @@
 				\includegraphics[width=0.3\textwidth]{epickitchens6.jpg}
 				\includegraphics[width=0.3\textwidth]{epickitchens7.jpg}
 			}
-			\caption{EPIC-KITCHENS}
+			\caption{EPIC-KITCHENS examples}
 		\end{figure}
 		\begin{figure}[h!]
 			\subfloat{
@@ -571,7 +571,7 @@
 				\includegraphics[width=0.3\textwidth]{imagenet7.jpeg}
 				\includegraphics[width=0.3\textwidth]{imagenet8.jpeg}
 			}
-			\caption{ImageNet}
+			\caption{ImageNet examples}
 		\end{figure}
 	\chapter{Recurent Neural Networks / Long-Short Term Memory}\label{appendix_b}
 		Processing time-sequence data with deep architectures has been challenging due to the necessity of incorporating a memory mechanism.
@@ -640,8 +640,8 @@
 		To better understand what is shown here, we specify that these types are the types of the {\itshape numpy} arrays in which the data was stored.
 		\par
 		To save some space in disk, we also considered using a compressed version of the dataset that we compare along with the uncompressed version.
-		In \ref{disk_size} and \ref{ram_size}, we see the size that a dataset occupies in disk and memory with respect of $N$ (number of samples); notice that for the memory, the compressed and uncompressed version are overlapping because compression is only taking place in disk.
-		It show the size is linear with $N$, which is to be expected, and that the the higher $N$ is, the bigger the difference between the two types is.
+		In \ref{disk_size} and \ref{ram_size}, we see the size that a dataset occupies in disk and memory with respect of $N$ (number of samples).
+		It show that the size is linear with $N$, which is to be expected, and that the the higher $N$ is, the bigger the difference between the two types is.
 		\begin{figure}[h!]
 			\centering
 			\subfloat[size in disk]{\includegraphics[width=0.5\textwidth]{disk_size.png}\label{disk_size}}
@@ -652,10 +652,10 @@
 			\caption{Comparison of $uint8$ and $float32$.}
 			\label{dtypes}
 		\end{figure}
-		In \ref{disk_size}, $float32\_npz$ and $uint8\_npz$ are overlapping and seem to be equal to zero, not because they are but rather because the sizes of the uncompressed versions are so big that they make the compressed version look so.
-		Changing from {\itshape float32} to {\itshape uint8} divide the loading time (in seconds) by a factor of 2 or more (\ref{load_time}).
+		In \ref{disk_size}, the compressed $float32$ and $uint8$ are overlapping and seem to be equal to zero, not because they are but rather because the sizes of the uncompressed versions are so big that they make the compressed version look so.
+		Changing from {\itshape float32} to {\itshape uint8} divide the loading time (in seconds) by at least a factor of 3 (\ref{load_time}).
 		However, using compressed data augment considerably the loading time, because of the decompression process (difference between the blue and the orange lines in \ref{load_time}).
-		Since, we load and train on groups of data rather than all the dataset at once, loading data is made several time during the training.
+		Since, we load and train on groups of data rather than all the dataset at once, groups of data are loaded several times during the training.
 		If we consider using the compressed version, we choose to sacrifice time for disk space, and the solution is to find a good tradeoff.
 		In my case, I was provided enough disk space to consider using uncompressed data, which saved me some time.
 	\chapter{Confusion matrices}\label{appendix_e}
