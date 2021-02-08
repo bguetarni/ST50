@@ -50,7 +50,7 @@
 	Plusieurs problèmes ont étés adressés notamment la détéction d'objets, la génération de contenu, la segmentation d'image ou d'instance et une poignée d'autres.
 	De nos jours, des tâches très complexes sont au coeur de la recherche académique, incluant la reconnaissance d'action ou d'activité; la différence entre ces deux tâches est très fine et nous nous concentrons ici sur la reconnaissance d'action (la différence peut être vue comme par example l'action 'prendre une fourchette' et l'activité 'cuisiner').
 	\par
-	Atteindre des résultats resonnables dans la reconnaissance d'action pourrait permettre de développer des systèmes de suivi de patient atteint de troubles physiques, comme des tremblements, dans leur vie de tous les jours.
+	Atteindre des résultats raisonnables dans la reconnaissance d'action pourrait permettre de développer des systèmes de suivi de patient atteint de troubles physiques, comme des tremblements, dans leur vie de tous les jours.
 	Il serait ainsi plus facile d'identifier les actions dont une personne éprouve du mal à effectuer, et ainsi conduire un processus de réhabilitation ciblée.
 	Dans ce projet nous explorons comment le deep learning peut-être appliqué à la reconnaissance d'action et quel en est l'état de l'art actuel.
 	Nous nous sommes concentré sur des solutions peu coûteuses en calcul puisque nous nous attendions à les implémenter sur des systèmes embarqués, e.g. téléphone mobile, NVIDIA Jetson Nano\dots
@@ -240,7 +240,7 @@
 				We looked for using {\itshape class weights}, that associate weights to each sample according to its class, but it didn't help and resulted in a lot of instability for the models.
 				\par
 				In our experiments we first used EPIC-KITCHENS-55 to reduce the time for hyperparameters search and a final model was trained on EPIC-KITCHENS-100 (\ref{results}).
-		\section{Studied methods}
+		\section{Architecture building blocks}
 			\subsection{Transfer Learning}
 				As ConvNet architectures have become bigger and bigger over the past 20 years, the time and amount of computations to train these networks grew exponentially.
 				Therefore, people searched for a way to reduce this training time and eventually recycle the learned knowledge, by transferring them from a domain to another, which later became Transfer Learning.
@@ -315,7 +315,7 @@
 			%	In \cite{sudhakaran2018attention}, the features maps extracted by a pre-trained backbone are used as weights to encode visual attention in RGB frames; rigorously speaking, the weights are derived from a pre-classification of these features maps.
 			%	Then these weighted frames go through a ConvLSTM for classification.
 			%	These weighted frames are called {\itshape Spatial Attention Map}.
-			\subsection{Architectures base}
+			\subsection{General architecture}
 				All the different architectures that we tried share a common base (drawn in Figure \ref{common_base}):
 				\begin{enumerate}
 					\item We draw 20 uniformly spaced RGB images ($N=20$) from the action video.
@@ -336,7 +336,7 @@
 					Loss = L_{verb} + L_{noun} \\
 				\end{align*}
 				where $y$ and $\hat{y}$ are the ground-truth and model prediction respectively.
-			\subsection{Temporal process subsystem}\label{subsystems}
+			\subsection{Temporal processing subsystem}\label{subsystems}
 				\subsubsection{LSTM}\label{lstm}
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
 					Their ability to propagate information during the inference is particularly appreciated as well as their independence of the sequence length, indeed the weights are shared across the sequence elements (which required the introduction of the {\itshape backpropagation through time} algorithm).
@@ -573,7 +573,7 @@
 			}
 			\caption{ImageNet}
 		\end{figure}
-	\chapter{Reccurent Neural Networks / Long-Short Term Memory}\label{appendix_b}
+	\chapter{Recurent Neural Networks / Long-Short Term Memory}\label{appendix_b}
 		Processing time-sequence data with deep architectures has been challenging due to the necessity of incorporating a memory mechanism.
 		To handle this, Recurrent Neural Network (RNN) use a recursive loop over the sequence elements while maintaining a memory state called {\itshape hidden state} reffered as {\itshape $a^{<>}$} in Figure \ref{rnn}.
 		This hidden state is charged to keep information flowing through the network by being updated at every step.
@@ -639,24 +639,16 @@
 		We show in Figure \ref{dtypes} different keypoint values with respect to the size of the dataset.
 		To better understand what is shown here, we specify that these types are the types of the {\itshape numpy} arrays in which the data was stored.
 		\par
-		To save some space in disk, we also considered using a compressed version of the dataset that we compare along with the uncompressed version. \\
-		The legends depicted in the figures mean:
-		%TODO: change legends name in plots if enough time
-		\begin{itemize}[noitemsep]
-			\item \makebox[3cm][l]{$float32$} compressed $float32$
-			\item \makebox[3cm][l]{$float32\_npz$} uncompressed $float32$
-			\item \makebox[3cm][l]{$uint8$} compressed $uint8$
-			\item \makebox[3cm][l]{$uint8\_npz$} uncompressed $uint8$
-		\end{itemize}
-		In \ref{disk_size} and \ref{ram_size}, we see the size, in bytes, that a dataset occupies in disk and memory with respect of $N$ (number of samples); notice that for the memory, the compressed and uncompressed version are overlapping because compression is only taking place in disk.
+		To save some space in disk, we also considered using a compressed version of the dataset that we compare along with the uncompressed version.
+		In \ref{disk_size} and \ref{ram_size}, we see the size that a dataset occupies in disk and memory with respect of $N$ (number of samples); notice that for the memory, the compressed and uncompressed version are overlapping because compression is only taking place in disk.
 		It show the size is linear with $N$, which is to be expected, and that the the higher $N$ is, the bigger the difference between the two types is.
 		\begin{figure}[h!]
 			\centering
-			\subfloat[disk size]{\includegraphics[width=0.47\textwidth]{disk_size.png}\label{disk_size}}
+			\subfloat[size in disk]{\includegraphics[width=0.5\textwidth]{disk_size.png}\label{disk_size}}
 			\hfill
-			\subfloat[RAM size]{\includegraphics[width=0.47\textwidth]{ram_size.png}\label{ram_size}}
+			\subfloat[size in memory]{\includegraphics[width=0.5\textwidth]{ram_size.png}\label{ram_size}}
 			\vfill
-			\subfloat[loading time]{\includegraphics[width=0.5\textwidth]{load_time.png}\label{load_time}}
+			\subfloat[loading time]{\includegraphics[width=0.55\textwidth]{load_time.png}\label{load_time}}
 			\caption{Comparison of $uint8$ and $float32$.}
 			\label{dtypes}
 		\end{figure}
