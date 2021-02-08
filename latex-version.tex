@@ -108,7 +108,8 @@
 			We will first describe the relationship between deep learning and computer vision to understand which important part the first has became to the latter.
 			Then, we'll review the egocentric action recognition state-of-the-art in the literature to describe afterwards which methods were studied.
 			In a critical process, we then critic the obtained results along with an interpretation.
-			Finally, we'll conclude with some personal observations and difficulties encountered and open some roads for future investigation.
+			We'll then discuss different difficulties encountered during the project.
+			Finally, we'll conclude with some personal observations and roads for future investigation.
 			\par
 			\bigbreak
 			The code is available at: \url{https://github.com/bguetarni/Egocentric-activity-recognition}.
@@ -227,12 +228,12 @@
 				\begin{figure}[h!]
 					\centering
 					\includegraphics[width=0.85\textwidth]{EPIC-55 data imbalance.png}
-					\caption{EPIC-KITCHENS 55 verbs instances.}
+					\caption{EPIC-KITCHENS-55 verbs instances.}
 					\label{epic_55_imbalance}
 				\end{figure}
-				This class imbalance produces highly biased models toward the most represented classes in the data. and is still present in the new version.
-				We looked for using {\itshape class weights}, that associate weights to each sample according to its class, but this didn't help but it resulted in a lot of instability for the models.
-				In our experiments we first used EPIC-KITCHENS-55 to reduce the time for hyperparameters search and one final model were trained on EPIC-KITCHENS-100 (\ref{results}).
+				This class imbalance produces highly biased models toward the most represented classes in the data, as shown in \ref{results}, and is still present in the new version.
+				We looked for using {\itshape class weights}, that associate weights to each sample according to its class, but it didn't help and resulted in a lot of instability for the models.
+				In our experiments we first used EPIC-KITCHENS-55 to reduce the time for hyperparameters search and a final model was trained on EPIC-KITCHENS-100 (\ref{results}).
 		\section{Studied methods}
 			\subsection{Transfer Learning}
 				As ConvNet architectures have become bigger and bigger over the past 20 years, the time and amount of computations to train these networks grew exponentially.
@@ -299,11 +300,6 @@
 			%	It has then been introduced in computer vision by \cite{xu2015show}, to help models for image captioning.
 			%	Focusing the attention on some features requires to highlight them, so they are visually more interesting.
 			%	In computer vision this can be seen as \gls{saliency} (Figure \ref{porsche}).
-			%	\begin{figure}[h!]
-			%		\centering
-			%		\subfloat{\includegraphics[width=0.4\textwidth]{porsche-saliency.jpeg}\label{porsche}}
-			%		\caption{Saliency map of a car as seen by a human.}
-			%	\end{figure}
 			%	In deep learning, one could use weights to make some features more visible than others.
 			%	In \cite{sudhakaran2018attention}, the features maps extracted by a pre-trained backbone are used as weights to encode visual attention in RGB frames; rigorously speaking, the weights are derived from a pre-classification of these features maps.
 			%	Then these weighted frames go through a ConvLSTM for classification.
@@ -334,7 +330,7 @@
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
 					Their ability to propagate information during the inference is particularly appreciated as well as their independence of the sequence length, indeed the weights are shared across the sequence elements (which required the introduction of the {\itshape backpropagation through time} algorithm).
 					They also attracted a lot of attention due to their ability to counter \gls{vanish}, especially LSTM \cite{Hochreiter1997lstm}; a brief recall of how RNN and LSTM work is described in appendix \ref{appendix_b}.
-					Despite their success, LSTM are also known to encounter chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent}, which make them difficult to train with little data.
+					Despite their success, LSTM are also known to encounter chaotic behaviour sometimes \cite{bertschinger2004,laurent2016recurrent}, which makes them difficult to train with little data.
 					Albeit these difficulties, we still tried to use LSTM because of its popularity.
 					Nonetheless, we must ensure that what is fed to the LSTM is a sequence of vectors and not images.
 					We thus used {\itshape global average pooling} on the output of MobileNetV2 to shrink them to vectors.
@@ -350,7 +346,7 @@
 					However, these operations result in a loss of information, sometimes to the detriment of useful information.
 					ConvLSTM is a good alternative that comes with all the potential of a CNN fused with the recurrence ability of LSTM.
 					However, one must consider that by using images, we drastically augment the number of parameters needed in the ConvLSTM.
-					As an example if we consider a sequence of $N*256*256$ RGB images going through MobileNetV2, we recover a sequence of $8*8$ feature maps with $1280$ channels each one.
+					As an example if we consider a sequence of $N*256*256$ images going through MobileNetV2, we recover a sequence of $8*8$ feature maps with $1280$ channels each one.
 					To send this through a LSTM, one must beforehand apply a spatial pooling to shrink those feature maps into $1*1$.
 					This sequence of vectors ($N*1*1*1280 \Leftrightarrow N*1280$) is then fed to a LSTM which output a feature vector with, let's say, 50 features.
 					This LSTM will then have ~266K parameters.
@@ -389,7 +385,7 @@
 					The kernel size of the convolution define the time window perceived by the convolution, i.e. how many seconds (or milliseconds) of the action the convolution is looking at.
 					The advantage of temporal convolutions is the possibility to decompose the temporal processing in many depth levels.
 					Rather than taking the kernel size being equal to the sequence length, which enforce it to extract the temporal correlations in one step, we can decompose the extraction in many depth levels as illustrated in Figure \ref{temp_conv}.
-					On the left we have a 1 level deep temporal convolution which have to extract the temporal correlations in one convolution, whereas on the right we increase the depthness to construct a hierarchical extraction of the temporal correlations; notice that the circles are actually vectors here.
+					On the left we have a 1 level deep temporal convolution which have to extract the temporal correlations in one convolution, whereas on the right we increase the depthness to construct a hierarchical extraction of the temporal correlations; notice that the circles are the feature vectors outputted by the global average pooling.
 					\begin{figure}[h!]
 						\centering
 						\includegraphics[width=0.8\textwidth]{temporal_convolution.png}
@@ -407,37 +403,38 @@
 			\par
 			In a first attempt, we simplified the problem in order to explore the different possibilities in terms of architecture and hyperparameters.
 			For this, we used a third of the data of EPIC-KITCHENS-100 (that is more or less similar to EPIC-KITCHENS-55 in term of size) to reduce the training time; we still split it in training and validation sets.
-			Furthermore, rather than training the models with all the classes (97 verbs and 300 nouns) we decided to take profit of the categorization of these classes illustrated in Figure \ref{categories}; notice that the data imbalance problem is still present even if the classes are encapsulated in categories.
+			Furthermore, rather than training the models with all the classes (97 verbs and 300 nouns) we decided to take profit of the categorization of these classes illustrated in Figure \ref{categories}; the data imbalance problem is still present even if the classes are encapsulated in categories.
 			\begin{figure}[h!]
 				\centering
 				\includegraphics[width=1.1\textwidth]{EPIC-100 data imbalance.png}
-				\caption{EPIC-KITCHENS 100 categories (top verbs / bottom nouns).}
+				\caption{EPIC-KITCHENS-100 categories (top verbs / bottom nouns).}
 				\label{categories}
 			\end{figure}
 			As the results were extremely poor, we went further in the simplification by considering only the verbs.
 			From there, we noticed a real improvement, so we report the accuracy of the three subsystems on the validation set in Table \ref{accuracy}; we couldn't use the test set because the labels are not available at this date.
 			\begin{table}[h!]
 				\centering
-				\begin{tabular}{ l c c c } 
-					subsystem & top-1(\%)  & top-3(\%) & top-5(\%) \\
+				\begin{tabular}{ l c c c c } 
+					subsystem & top-1(\%)  & top-3(\%) & top-5(\%) & size\\
 					\hline
-					LSTM & 7.11 & 21.26 & 31.58 \\
-					ConvLSTM & 12.00 & 35.95 & 58.3 \\
-					ConvNet1D & \textbf{18.17} & \textbf{50.56} & \textbf{73.69} \\
+					LSTM & 7.11 & 21.26 & 31.58 & 266,963 \\
+					ConvLSTM & 12.00 & 35.95 & 58.3 & 446,909 \\
+					ConvNet1D & \textbf{18.17} & \textbf{50.56} & \textbf{73.69} & 85,137 \\
 				\end{tabular}
-				\caption{Acurracy of the temporal subsystems on verb categories.}
+				\caption{Acurracy and size (number of parameters) of the temporal subsystems on verb categories.}
 				\label{accuracy}
 			\end{table}
 			We see that the top-1 accuracy is actually quite poor for all of the temporal subsystems but with a noticeable difference between ConvNet1D and LSTM, the first is more than two times better than the latter.
-			When looking at the training curve of the ConvLSTM subsystem, Figure \ref{convlstm_curve}, we could think that it generally predicts well on the training data.
+			Notice the difference between LSTM and ConvLSTM as well, we think that this difference can be due to the fact that ConvLSTM has access to not shrunk images.
+			Besides this, the domination of ConvNet1D can be explained by the smaller number of parameters to train compared to LSTM and ConvLSTM (see Table \ref{accuracy} last column), as well as the decomposition of the temporal processing into different depth levels.
+			When looking at the training curve of the ConvLSTM subsystem, Figure \ref{convlstm_curve}, we could think that it generally predicts well on the training data, but its confusion matrix on the validation set, Appendix \ref{appendix_e}-\ref{cfs_mtrx_convlstm}, suggests that it predicts more or less one class (category).
 			\begin{figure}[h!]
 				\centering
 				\includegraphics[width=0.9\textwidth]{curve.png}
 				\caption{ConvLSTM training loss curve.\protect\footnotemark}
 				\label{convlstm_curve}
 			\end{figure}
-			\footnotetext{The weird peaks in the curve are due to the training process described in \ref{memory}.}
-			But, looking at its confusion matrix on the validation set, Appendix \ref{appendix_e}-\ref{cfs_mtrx_convlstm}, we realize that it predicts more or less one class (category).
+			\footnotetext{The strange peaks in the curve are due to the training process described in \ref{memory}.}
 			We observe the same phenomena for the LSTM, Figure \ref{lstm_curve} and Appendix \ref{appendix_e}-\ref{cfs_mtrx_lstm}.
 			\begin{figure}[h!]
 				\centering
@@ -459,7 +456,7 @@
 					\hline
 					top-1 & top-3 & top-5 & top-1 & top-3 & top-5 & top-1 & top-3 & top-5 \\
 					\hline
-					19.22 & 44.0 & 55.99 & 3.80 & 10.98 & 17.74 & 0.71 & 2.27 & 4.36 \\
+					18.80 & 43.49 & 55.47 & 3.82 & 11.08 & 17.76 & 5.01 & 8.18 & 10.42 \\
 					\hline
 				\end{tabular}
 				\caption{Acurracy of ConvNet1D on EPIC-KITCHENS-100.}
@@ -517,14 +514,22 @@
 				Nonetheless, we had recourse to distributed training when a good set of hyperparameters was found, as well as for the last convNet1D model.
 				It is worth noting that the last model trained on EPIC-KITCHENS-100 took more than six days for 100 epochs, even with two GPUs and 165Gb of RAM.
 	\chapter{Conclusion}
-		\section{Results synthesis} %TODO
-			Lorem ipsum.
-		\section{Roads for investigation} %TODO
-			Lorem ipsum.
-		\section{Acquired knowledge and skills} %TODO
+		\section*{Results synthesis}
+			To synthesize, the different temporal subsystems, coupled with MobileNetV2, did barely learn something, and when it looks like they are, they actually learn to predict a restricted subset of the classes.
+			This is a consequence of class imbalanced data that cannot, or hardly, produce non-biased models towards this subset of classes.
+			Furthermore, we shown that despite its popularity, the LSTM architecture can sometimes be surpassed by simpler architectures because of its complexity and big number of parameters.
+			We also shown that ConvLSTM provides an advantage over LSTM when working on images and hence derives better performance on a validation set, despites its bigger size.
+		\section*{Roads for investigation}
+			During this project, we spent a lot of time lookig for the good set of hyperparameters and use of Transfer Learning as well as exploring the dataset.
+			We think that a good next step woulb be to use the available optical flow fields of EPIC-KITCHENS videos (they are provided in the dataset) and to use them in an attention mechanism.
+			In the recent literature of computer vision deep learning, attention mechanisms are omnipresent and it has be shown that they enhance the performance for several recognition tasks.
+			Indeed, in the last few weeks of the proejct we spent some time developing this idea but unfortunately we have been cut off by time.
+			Another good step would be to use a bigger backbone than MobileNetV2, to create deeper features, and use model pruning afterwards to reduce its size.
+		\section*{Acquired knowledge and skills}
 			Through this project I had the opportunity to work on a topic that is currently on the deep learning and computer vision research front scene.
-			This project shown me the difficulty to work with deep architectures, especially debugging such huge black boxes.
-			After all the literature reviewing on the subject, I learned many things about recent developed techniques and architectures.
+			This project shown me the difficulty to work with deep architectures, especially debugging such big black boxes.
+			After all the literature reviewing on the subject, I also expanded my knowledge about recent deep learning techniques as well as the different difficulties that a model can encounter in a training process.
+
 	\bibliographystyle{apalike}
 	\bibliography{bibliography}
 	\appendix
