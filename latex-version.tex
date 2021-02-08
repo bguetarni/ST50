@@ -15,6 +15,7 @@
 \usepackage[toc,page]{appendix}
 \usepackage{chngcntr}
 \usepackage{xurl}
+\usepackage{enumitem}
 
 \titleformat{\chapter}[block]{\normalfont\huge\bfseries}{\thechapter.}{5pt}{\Huge}
 \titlespacing{\chapter}{0pt}{0pt}{40pt}
@@ -25,6 +26,8 @@
 \renewcommand*{\glstextformat}[1]{\color{black}{#1}}
 \counterwithout{figure}{chapter}
 \counterwithout{figure}{section}
+\counterwithout{table}{chapter}
+\counterwithout{table}{section}
 
 %----------------------------------------
 % utbmcovers configuration
@@ -203,8 +206,8 @@
 				This reflects the difficulty to produce accurate and large scaled datasets for supervised learning tasks.
 				\par
 				For egocentric action recognition, a team of researchers have published a large scaled dataset of kitchen actions in egocentric vision: \href{https://epic-kitchens.github.io/2021}{EPIC-KITCHENS}.
-				This dataset has been first published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS 55).
-				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS 100) splitted into train (75\%), validation (10\%) and test (15\%) sets.
+				This dataset has been first published in 2018, \cite{damen2018scaling}, with approximately 40K actions using more than 55 hours of recording (EPIC-KITCHENS-55).
+				Recently, a second version came out, \cite{damen2020rescaling}, with more than 90K action segments which have been extracted from 100 hours of recording (EPIC-KITCHENS-100) splitted into train (75\%), validation (10\%) and test (15\%) sets.
 				Not only it contains action recognition labels, but also action detection, action anticipation and several others challenges.
 				To this date, it's the biggest open egocentric action recognition dataset available.
 				\par
@@ -217,17 +220,19 @@
 				The biggest advantage of using this dataset is its natural looking data.
 				The videos were recording by researchers, engineers, students and other people, in their kitchens while they were doing daily activities like: cooking, cleaning, etc.
 				The resulting data have a very natural aspect which makes it suitable to train models with real world environments knowledge.
-				However using a big dataset implies a finest management of the memory.% TODO: link to the RAM usage consideration
+				However using a big dataset implies a finest management of the memory (see \ref{memory}).
 				A major drawback that natural data contained is the biased proportion between labels.
 				For any activity, all actions that we do are not uniformly distributed in time.
-				This is illustrated by the proportion of samples of each verb class in EPIC-KITCHENS 55 in Figure \ref{epic_55_imbalance}; the same problem occur for the noun classes.
+				This is illustrated by the proportion of samples of each verb class in EPIC-KITCHENS-55 in Figure \ref{epic_55_imbalance}; the same problem occur for the noun classes.
 				\begin{figure}[h!]
 					\centering
 					\includegraphics[width=0.85\textwidth]{EPIC-55 data imbalance.png}
 					\caption{EPIC-KITCHENS 55 verbs instances.}
 					\label{epic_55_imbalance}
 				\end{figure}
-				This class imbalance produces highly biased models toward the most represented classes in the data.
+				This class imbalance produces highly biased models toward the most represented classes in the data. and is still present in the new version.
+				We looked for using {\itshape class weights}, that associate weights to each sample according to its class, but this didn't help but it resulted in a lot of instability for the models.
+				In our experiments we first used EPIC-KITCHENS-55 to reduce the time for hyperparameters search and one final model were trained on EPIC-KITCHENS-100 (\ref{results}).
 		\section{Studied methods}
 			\subsection{Transfer Learning}
 				As ConvNet architectures have become bigger and bigger over the past 20 years, the time and amount of computations to train these networks grew exponentially.
@@ -272,7 +277,7 @@
 				We provide in appendix \ref{appendix_a}, examples of both datasets to see how different they are.
 				Even if basic features are shared (edges, corners...), we thought that the high-level features to extract are not transferable from ImageNet to EPIC-KITCHENS.
 				\par
-				{\boldtahomafont MobileNetV2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge device utilization.
+				\textbf{MobileNetV2} \cite{sandler2019mobilenetv2} is a ConvNet developed with the objective to optimize the computations for edge device utilization.
 				Modern deep networks have millions of parameters, and they are trained with modern technologies like GPU and TPU.
 				However, embedding such networks in devices with limited computation power implies to minimize the computations, especially for real-time solutions.
 				MobileNetV2 is a deep ConvNet made of several residual blocks, similarly to ResNet \cite{he2015deep}, which has been shown to help with vanishing and exploding gradient.
@@ -282,6 +287,7 @@
 				The final convolution, after the last block, outputs 1280 features.
 				From the beginning of the project, we intended to, if a model was successful enough, use it in an edge device with real-time predictions.
 				Thus, we designed our architectures using MobileNetV2 pre-trained on ImageNet as a feature extractor.
+				%TODO: finally we use all MobileNet
 			%\subsection{Attention}
 			%	\say{Attention mechanism was proposed for focusing attention on features that are relevant for the task to be recognized} \cite{sudhakaran2019lsta}.
 			%	We, humans, have the capacity to focus our {\itshape attention} into a small zone of our field of view.
@@ -307,7 +313,7 @@
 					\item We draw 20 uniformly spaced RGB images ($N=20$) from the action video.
 					\item Each image is fed to the pre-trained MobileNet V2.
 					\item The resulting feature maps are then fed sent to a temporal processing subsystem; a spatial pooling must be applied beforehand in some cases.
-					\item Finally, we use 2 fully-connected layers to output the {\itshape verb} and {\itshape noun} probability distributions.
+					\item Finally, we use two fully-connected layers to output the {\itshape verb} and {\itshape noun} probability distributions.
 					\item The error backpropagation is applied to the fully-connected layers and the temporal processing only (red box in Figure \ref{common_base}).
 				\end{enumerate}
 				\begin{figure}[h!]
@@ -322,7 +328,7 @@
 					Loss = L_{verb} + L_{noun} \\
 				\end{align*}
 				where $y$ and $\hat{y}$ are the ground-truth and model prediction respectively.
-			\subsection{Temporal process subsystem}
+			\subsection{Temporal process subsystem}\label{subsystems}
 				\subsubsection{LSTM}\label{lstm}
 					Recurrent neural networks have been largely successfully applied to sequence-to-sequence prediction problems, especially in \gls{nlp} \cite{wu2016google,shen2018natural,miao2020application}.
 					Their ability to propagate information during the inference is particularly appreciated as well as their independence of the sequence length, indeed the weights are shared across the sequence elements (which required the introduction of the {\itshape backpropagation through time} algorithm).
@@ -391,42 +397,134 @@
 					\par
 					We use these temporal convolutions the same way we use a LSTM, i.e. the images go through MobileNetV2, then we retrieve the resulting feature maps, we apply some spatial pooling to shrink them to vectors, and feed the resulting feature vectors to a CNN of 1D convolutions.
 					In our studies, this {\itshape ConvNet1D} consists of stacked 1D convolutions (using kernels of size 3) with batch normalization and LeakyReLU activation.
-		\section{Results and interpretation}
-			In a first attempt, we used EPIC-KITCHENS-55 to reduce the training time in order to explore the different possibilities in terms of: architecture, hyperparameters and data processing.
-			All the models were trained using the Adam optimizer with an initial learning rate of 0.001 and a learning rate decay of 0.2 starting from epochs 35, every 20 epochs.
-			We used different batchs sizes, depending on how much GPU were used and how much data were used.
-			We also added a dropout of 0.5 before the two fully-connected layer to reduce overfitting.
+		\section{Results and interpretation}\label{results}
+			The models were trained during 100 epochs, using the Adam optimizer with an initial learning rate of 0.001 and learning rate decay with a factor of 0.2 starting from epochs 35 and every 20 epochs.
+			In most cases the training was stopped before the end because of the performance not improving or overfitting (early stopping).
+			The batch size was fixed to 32 when using two GPUs and to 16 when using only one.
+			We also added a dropout of 0.5 before the two fully-connected layers to reduce overfitting.
+			These hyperparameters were fixed because they provided the best results after several experiments, we will not report the intermediate results here because they were really poor and not extremely different.
+			\par
+			In a first attempt, we simplified the problem in order to explore the different possibilities in terms of architecture and hyperparameters.
+			For this, we used a third of the data of EPIC-KITCHENS-100 (that is more or less similar to EPIC-KITCHENS-55 in term of size) to reduce the training time; we still split it in training and validation sets.
+			Furthermore, rather than training the models with all the classes (97 verbs and 300 nouns) we decided to take profit of the categorization of these classes illustrated in Figure \ref{categories}; notice that the data imbalance problem is still present even if the classes are encapsulated in categories.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=1.1\textwidth]{EPIC-100 data imbalance.png}
+				\caption{EPIC-KITCHENS 100 categories (top verbs / bottom nouns).}
+				\label{categories}
+			\end{figure}
+			As the results were extremely poor, we went further in the simplification by considering only the verbs.
+			From there, we noticed a real improvement, so we report the accuracy of the three subsystems on the validation set in Table \ref{accuracy}; we couldn't use the test set because the labels are not available at this date.
+			\begin{table}[h!]
+				\centering
+				\begin{tabular}{ l c c c } 
+					subsystem & top-1(\%)  & top-3(\%) & top-5(\%) \\
+					\hline
+					LSTM & 7.11 & 21.26 & 31.58 \\
+					ConvLSTM & 12.00 & 35.95 & 58.3 \\
+					ConvNet1D & \textbf{18.17} & \textbf{50.56} & \textbf{73.69} \\
+				\end{tabular}
+				\caption{Acurracy of the temporal subsystems on verb categories.}
+				\label{accuracy}
+			\end{table}
+			We see that the top-1 accuracy is actually quite poor for all of the temporal subsystems but with a noticeable difference between ConvNet1D and LSTM, the first is more than two times better than the latter.
+			When looking at the training curve of the ConvLSTM subsystem, Figure \ref{convlstm_curve}, we could think that it generally predicts well on the training data.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=0.9\textwidth]{curve.png}
+				\caption{ConvLSTM training loss curve.\protect\footnotemark}
+				\label{convlstm_curve}
+			\end{figure}
+			\footnotetext{The weird peaks in the curve are due to the training process described in \ref{memory}.}
+			But, looking at its confusion matrix on the validation set, Appendix \ref{appendix_e}-\ref{cfs_mtrx_convlstm}, we realize that it predicts more or less one class (category).
+			We observe the same phenomena for the LSTM, Figure \ref{lstm_curve} and Appendix \ref{appendix_e}-\ref{cfs_mtrx_lstm}.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=0.9\textwidth]{curve_lstm.png}
+				\caption{LSTM training loss curve.}
+				\label{lstm_curve}
+			\end{figure}
+			We suspect that the models learned to predict only a restricted number of classes that are ubiquitous in the dataset compared to the other ones, which can mean that they were stucked at a local minima of the loss function.
+			This is a difficult situation to dealt with and an extensive research of the hyperparameters could lead to better results.
+			From our perspective, we think that the poorness of the results illustrates the difficulty of the task and the difficulty to learn on natural data that present high statistic variability.
+			\par
+			In a final attempt, we trained a model using ConvNet1D, we would do the other ones if we had enough time, on EPIC-KITCHENS-100 using verbs and nouns without categorizing.
+			We report the results on the validation set in Table \ref{convnet_accuracy}.
+			\begin{table}[h!]
+				\centering
+				\begin{tabular}{| c | c | c | c | c | c | c | c | c |}
+					\hline
+					\multicolumn{3}{|c|}{verbs} & \multicolumn{3}{|c|}{nouns} & \multicolumn{3}{|c|}{actions} \\
+					\hline
+					top-1 & top-3 & top-5 & top-1 & top-3 & top-5 & top-1 & top-3 & top-5 \\
+					\hline
+					19.22 & 44.0 & 55.99 & 3.80 & 10.98 & 17.74 & 0.71 & 2.27 & 4.36 \\
+					\hline
+				\end{tabular}
+				\caption{Acurracy of ConvNet1D on EPIC-KITCHENS-100.}
+				\label{convnet_accuracy}
+			\end{table}
+			The results are lower than before because of the bigger number of classes and the fact that we also predict the nouns.
+			In the third column we see the accuracy of the action, where we consider the actions as all the possible pair (verb,noun), which produces $97*300=29100$ classes.
+			However, we are not surprised by the results because if the model can poorly perform on a restricted number of classes, we expect it to be even worse when more classes are used.
+			But still, we observe the same phenomena as before, where the model seems to learn the task for a restricted number of classes, see Figure \ref{convnet_curve} (the confusion matrix can't be displayed as there are too many classes).
+			\par
+			Unfortunately, there are currently no other baseline to compare with due to the recentness of the dataset.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=0.9\textwidth]{convnet1Df_curve.png}
+				\caption{ConvNet1D training loss curve on EPIC-KITCHENS-100.}
+				\label{convnet_curve}
+			\end{figure}
 		\section{Tools}
 			It's almost frightening the ease with which one can implement deep learning algorithms.
-			Back in the 90's, researchers would take several weeks to develop a simple ConvNet, and even more to train it.
-			Today, with the python librairies, GPUs and storage devices that we have access to, such ConvNet can be written and train in hours only.
-			The tools that we have in our disposition make deep learning looks like a children game, and may be dangerous if we use is without knowing what is under the hood.
+			Back in the 90's, researchers would take several weeks to train a simple ConvNet.
+			Today, with python librairies, GPUs and storage devices that we have access to, such ConvNet can be train in hours only.
+			The tools that we have in our disposition make deep learning looks like a children game, but can be dangerous if we use is without knowing what is under the hood.
 			For this project we used the Keras API, that is built on Tensorflow (2.4), to develop, train and test our models, coupled with two NVIDIA GTX 1080Ti.
-			We used distributed training to speed up the training because of the large size of one sample (i.e. a $N*256*256*3$, where $N$ can be up to 20).
-			Indeed, this large size prevented us from loading all the dataset in memory and train the models in one stage, we were therefore forced to resort to a workaround described in section \ref{difficulties}.
+			We used distributed training to speed up the training because of the large size of one sample.
+			Indeed, this large size prevented us from loading all the dataset in memory and training the models in one stage, we were therefore forced to resort to a workaround described in section \ref{difficulties}.
 		\section{Difficulties and problems}\label{difficulties}
-			The major difficulty of this project was the memory management, for two reasons:
-			\begin{itemize}
-				\item Let's consider the size of one sample where the sequence length is fixed to 20: $20*256*256*3 = 3932160$. Each sample is a vector of almost 4 millions float32 values, which makes a total of 15Mo footprint for one such sample; a float32 value is encoded in 4 bytes.
-				Considering that we had 250Go of RAM, it means that we can fit only 17K samples at a time, meanwhile our train set contained 67K samples.
-				\item While a model was training using theoretically 30\% of the RAM, because we divided the dataset in this way, we realized that it was actually using more than 60\%.
-				After some investigations we found that keras was storing a duplicate of the data in the backend resulting in a surplus of memory usage, with even memory leak at some point.
-			\end{itemize}
-			These two reasons forced us to take memory management under serious consideration.
-			We decided to divide the training procedure by training the models on groups of data.
-			We divide our training/validation data in groups such that each group size is equal to a certain percentage of the RAM.
-			We load the first group and train the model for a certain number of epochs and we record some validation metrics.
-			We then do the same thing for each other groups until all the model get through all of them.
-			At this point we go back to the frist group and iterate until all groups have been used $n$ times; where $n$ is the number of epochs.
+			\subsection{Memory}\label{memory}
+				The major difficulty of this project was the memory management, for two reasons:
+				\begin{itemize}
+					\item Let's consider the size of one sample where the sequence length is fixed to 20 $\rightarrow 20*256*256*3 = 3932160$. Each sample is a vector of almost 4 millions float32 values, which makes a total of 15Mb footprint for one such sample.
+					Considering that we had 250Gb of RAM, it means that we can fit only 17K samples at a time, meanwhile our train set contained 67K samples.
+					\item While a model was training using theoretically 30\% of the RAM, because we divided the dataset in this way, we realized that it was actually using more than 60\%.
+					After some investigations we found that Keras was storing a duplicate of the data in the backend resulting in a surplus of memory usage, with even memory leak at some point.
+				\end{itemize}
+				These two reasons forced us to take memory management under serious considerations.
+				We decided to divide the training procedure by training the models on groups of data.
+				We divide our training/validation data in groups such that each group size is equal to a certain percentage of the RAM.
+				We load the first group and train the model for a certain number of epochs and we record some validation metrics.
+				We then do the same thing for each other groups, at this point we go back to the frist group and iterate until all groups have been used $n$ times; where $n$ is the number of epochs.
+				This lead to a huge waste of time of data loading into the memory, but is unfortunately necessary.
+				However, a good practice that can saves time and memory space , is the data type used to store the data.
+				When working with images, two number formats are ubiquitous, {\itshape unsigned integer} and {\itshape single-precision floating-point}, respectively denoted as $uint8$ and $float32$.
+				These two formats encode data using 1 and 4 bytes respectively.
+				$uint8$ can encode natural numbers between 0 and 255, which are the values a pixel can takes, it is well-suited for this reason.
+				On the other side, $float32$ can encode decimal values in a really wide range.
+				The advantage of working with images, is that we can store them in memory as natural numbers, and convert them to decimal value before using a batch; because deep learning models work with normalized decimal values.
+				Thus, the data was stored and loaded as $uint8$, and when a batch is presented we convert it to $float32$ and normalize the values.
+				We provide in appendix \ref{appendix_d} a slightly detailed comparison of these two types.
+			\subsection{Time}
+				When training deep architectures with big datasets (or big samples in our case), the time needed fo a model to train can rapidly explode.
+				This is the first problem that required our attention and that we had to work on.
+				A first solution was to train our models with the process described above.
+				Next, we could use more memory and use bigger groups and reduce the number of loading required for one epoch.
+				We had in our disposition two GPUs, and most of the time we ran one model per GPU, so the memory had to be divided by two.
+				Nonetheless, we had recourse to distributed training when a good set of hyperparameters was found, as well as for the last convNet1D model.
+				It is worth noting that the last model trained on EPIC-KITCHENS-100 took more than six days for 100 epochs, even with two GPUs and 165Gb of RAM.
 	\chapter{Conclusion}
 		\section{Results synthesis}
 			Lorem ipsum.
-		\section{Observations}
-			Lorem ipsum.
+			%TODO
 		\section{Roads for investigation}
 			Lorem ipsum.
+			%TODO
 		\section{Acquired knowledge and skills}
-			Lorem ipsum.
+			Through this project I had the opportunity to work on a topic that is currently on the deep learning and computer vision research front scene.
+			This project shown me the difficulty to deal with deep architectures, especially debugging such black boxes.
 	\bibliographystyle{apalike}
 	\bibliography{bibliography}
 	\appendix
@@ -501,6 +599,53 @@
 			\vfill
 			\subfloat[$m$]{\includegraphics[width=0.3\textwidth]{opticalflow/uv.png}}
 			\caption{Optical flow field example.}\label{optical_flow}
+		\end{figure}
+	\chapter{Data type}\label{appendix_d}
+		We didn't include implementation details in this report except for this to facilitate the comprehension of the discussed problem.
+		\par
+		Managing memory carefully can benefit a considerable reduce of computation time and memory consumption.
+		We show in Figure \ref{dtypes} different keypoint values with respect to the size of the dataset.
+		To better understand what is shown here, we specify that these types are the types of the {\itshape numpy} arrays in which the data was stored.
+		\par
+		To save some space in disk, we also considered using a compressed version of the dataset that we compare along with the uncompressed version. \\
+		The legends depicted in the figures mean:
+		%TODO: change legends name in plots if enough time
+		\begin{itemize}[noitemsep]
+			\item \makebox[3cm][l]{$float32$} compressed $float32$
+			\item \makebox[3cm][l]{$float32\_npz$} uncompressed $float32$
+			\item \makebox[3cm][l]{$uint8$} compressed $uint8$
+			\item \makebox[3cm][l]{$uint8\_npz$} uncompressed $uint8$
+		\end{itemize}
+		In \ref{disk_size} and \ref{ram_size}, we see the size, in bytes, that a dataset occupies in disk and memory with respect of $N$ (number of samples); notice that for the memory, the compressed and uncompressed version are overlapping because compression is only taking place in disk.
+		It show the size is linear with $N$, which is to be expected, and that the the higher $N$ is, the bigger the difference between the two types is.
+		\begin{figure}[h!]
+			\centering
+			\subfloat[disk size]{\includegraphics[width=0.47\textwidth]{disk_size.png}\label{disk_size}}
+			\hfill
+			\subfloat[RAM size]{\includegraphics[width=0.47\textwidth]{ram_size.png}\label{ram_size}}
+			\vfill
+			\subfloat[loading time]{\includegraphics[width=0.5\textwidth]{load_time.png}\label{load_time}}
+			\caption{Comparison of $uint8$ and $float32$.}
+			\label{dtypes}
+		\end{figure}
+		In \ref{disk_size}, $float32\_npz$ and $uint8\_npz$ are overlapping and seem to be equal to zero, not because they are but rather because the sizes of the uncompressed versions are so big that they make the compressed version look so.
+		Changing from {\itshape float32} to {\itshape uint8} divide the loading time (in seconds) by a factor of 2 or more (\ref{load_time}).
+		However, using compressed data augment considerably the loading time, because of the decompression process (difference between the blue and the orange lines in \ref{load_time}).
+		Since, we load and train on groups of data rather than all the dataset at once, loading data is made several time during the training.
+		If we consider using the compressed version, we choose to sacrifice time for disk space, and the solution is to find a good tradeoff.
+		In my case, I was provided enough disk space to consider using uncompressed data, which saved me some time.
+	\chapter{Confusion matrices}\label{appendix_e}
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=1.\textwidth]{cfs_mtrx/epic55_ConvLSTM_0_last.tf.npz_0.png}
+			\caption{ConvLSTM confusion matrix.}
+			\label{cfs_mtrx_convlstm}
+		\end{figure}
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=1.\textwidth]{cfs_mtrx/epic55LSTM1_50.tf.npz_0.png}
+			\caption{LSTM confusion matrix.}
+			\label{cfs_mtrx_lstm}
 		\end{figure}
 	\makeutbmbackcover{}
 \end{document}
