@@ -522,8 +522,8 @@
 				A first solution was to train our models with the process described above.
 				Next, we could use more memory and use bigger groups and reduce the number of loading required for one epoch.
 				We had in our disposition two GPUs, and most of the time we ran one model per GPU, so the memory had to be divided by two.
-				Nonetheless, we had recourse to distributed training when a good set of hyperparameters was found, as well as for the last convNet1D model.
-				It is worth noting that the last model trained on EPIC-KITCHENS-100 took more than six days for 100 epochs, even with two GPUs and 165Gb of RAM.
+				Nonetheless, we had recourse to distributed training when a good set of hyperparameters was found, as well as for the last ConvNet1D model.
+				It is worth noting that this last model, trained on EPIC-KITCHENS-100, took more than six days for 100 epochs, even with two GPUs and 165Gb of RAM.
 	\chapter{Conclusion}
 		\section*{Results synthesis}
 			To synthesize, the different temporal subsystems, coupled with MobileNetV2, did barely learn something, and when it looks like they are, they actually learn to predict a restricted subset of the classes.
